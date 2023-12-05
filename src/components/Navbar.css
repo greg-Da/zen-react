@@ -1,0 +1,30 @@
+/* DOESN T WORK */
+.unfold{
+    display: block;
+    animation: unfold 1s forwards;
+    
+}
+
+.fold{
+    animation: unfold 1s backwards;
+
+}
+
+@keyframes unfold {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+@keyframes fold {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-100%);
+        display: none;
+    }
+}
