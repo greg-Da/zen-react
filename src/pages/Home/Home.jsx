@@ -1,13 +1,39 @@
 import { useState } from "react";
 import picture from "/Dr_Hanson.png?url";
+import { useEffect } from "react";
+import "./Home.css";
+import Modal from "../../components/Modal";
 
 export default function Home() {
-  const [specialtiesOpen, setSpecialtiesOpen] = useState(false)
-  const [educationOpen, setEducationOpen] = useState(false)
-  const [licensesOpen, setLicensesOpen] = useState(false)
-  const [certificationsOpen, setCertificationsOpen] = useState(false)
+  const [specialtiesOpen, setSpecialtiesOpen] = useState(false);
+  const [educationOpen, setEducationOpen] = useState(false);
+  const [licensesOpen, setLicensesOpen] = useState(false);
+  const [certificationsOpen, setCertificationsOpen] = useState(false);
+  const [updates, setUpdates] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [updateInfo, setUpdateInfo] = useState({});
+
+  useEffect(() => {
+    fetch("http://localhost:3000/updates")
+      .then((res) => res.json())
+      .then((data) => {
+        setUpdates(data);
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  function setModale(update) {
+    setUpdateInfo(update);
+    setOpenModal(true);
+  }
+
   return (
-    <div className="py-4 px-4 lg:px-64 w-full overflow-hidden">
+    <div
+      className={`${
+        openModal ? "overflow-hidden h-[88.5vh]" : ""
+      } py-4 px-4 lg:px-64 w-full overflow-hidden`}
+    >
       <div className="flex flex-col items-center">
         <img
           src={picture}
@@ -34,39 +60,60 @@ export default function Home() {
       </div>
 
       <div className="mt-5 lg:mt-14">
-        <h2 className="font-bold text-xl md:text-3xl cursor-pointer">Find me on Youtube</h2>
+        <h2 className="font-bold text-xl md:text-3xl cursor-pointer">
+          Find me on Youtube
+        </h2>
         <div className="lg:flex lg:justify-center">
           <div className="mt-2 lg:w-2/3">
             <div className="w-full relative overflow-hidden pt-[56.25%]">
-              <iframe
+              {/* <iframe
                 className="absolute top-0 left-0 right-0 bottom-0 w-full h-full"
                 src="https://www.youtube.com/embed/Tey_K-nCitk?si=RzD8nHj9J08UNxzp"
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              ></iframe>
+                allowFullScreen
+              ></iframe> */}
             </div>
           </div>
         </div>
       </div>
 
       <div className="mt-5 lg:mt-14 overflow-x-scroll">
-        <h2 className="font-bold text-xl md:text-3xl cursor-pointer">Updates</h2>
+        <h2 className="font-bold text-xl md:text-3xl cursor-pointer">
+          Updates
+        </h2>
         <div className="mt-2 flex w-fit">
-          <div className="bg-black h-32 md:h-96 w-32 md:w-96 mr-2"></div>
-          <div className="bg-black h-32 md:h-96 w-32 md:w-96 mr-2"></div>
-          <div className="bg-black h-32 md:h-96 w-32 md:w-96 mr-2"></div>
-          <div className="bg-black h-32 md:h-96 w-32 md:w-96 mr-2"></div>
-          <div className="bg-black h-32 md:h-96 w-32 md:w-96"></div>
+          {updates.map((update) => (
+            <div
+              onClick={() => setModale(update)}
+              key={update.id}
+              className="cursor-pointer h-32 md:h-64 w-32 md:w-64 mr-2"
+            >
+              <p className="font-bold text-xl text-center">{update.title}</p>
+              <p className="clamp-4">{update.content}</p>
+            </div>
+          ))}
         </div>
       </div>
 
       <div className="mt-5 lg:mt-14">
-        <h2 onClick={() => setSpecialtiesOpen(!specialtiesOpen)} className="font-bold text-xl md:text-3xl cursor-pointer">
-          Specialties <i className={`fa-solid ${specialtiesOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+        <h2
+          onClick={() => setSpecialtiesOpen(!specialtiesOpen)}
+          className="font-bold text-xl md:text-3xl cursor-pointer"
+        >
+          Specialties{" "}
+          <i
+            className={`fa-solid ${
+              specialtiesOpen ? "fa-chevron-up" : "fa-chevron-down"
+            }`}
+          ></i>
         </h2>
 
-        <div className={`${specialtiesOpen ? "block" : "hidden"} mt-2 grid grid-cols-2 gap-4 lg:grid-cols-4`}>
+        <div
+          className={`${
+            specialtiesOpen ? "block" : "hidden"
+          } mt-2 grid grid-cols-2 gap-4 lg:grid-cols-4`}
+        >
           <div className="p-2 bg-beige rounded-md flex justify-center items-center">
             <p className="text-center">Anxiety Management</p>
           </div>
@@ -102,11 +149,23 @@ export default function Home() {
       </div>
 
       <div className="mt-5 lg:mt-14">
-        <h2 onClick={() => setEducationOpen(!educationOpen)} className="font-bold text-xl md:text-3xl cursor-pointer">
-          Education <i className={`fa-solid ${educationOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+        <h2
+          onClick={() => setEducationOpen(!educationOpen)}
+          className="font-bold text-xl md:text-3xl cursor-pointer"
+        >
+          Education{" "}
+          <i
+            className={`fa-solid ${
+              educationOpen ? "fa-chevron-up" : "fa-chevron-down"
+            }`}
+          ></i>
         </h2>
 
-        <div className={`${educationOpen ? "block" : "hidden"} mt-2 grid grid-cols-2 gap-4 lg:grid-cols-3`}>
+        <div
+          className={`${
+            educationOpen ? "block" : "hidden"
+          } mt-2 grid grid-cols-2 gap-4 lg:grid-cols-3`}
+        >
           <div className="p-2 bg-beige rounded-md flex justify-center items-center">
             <p className="text-center">Doctorate in Social Work</p>
           </div>
@@ -140,11 +199,23 @@ export default function Home() {
       </div>
 
       <div className="mt-5 lg:mt-14">
-        <h2 onClick={() => setLicensesOpen(!licensesOpen)} className="font-bold text-xl md:text-3xl cursor-pointer">
-          Licenses <i className={`fa-solid ${licensesOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+        <h2
+          onClick={() => setLicensesOpen(!licensesOpen)}
+          className="font-bold text-xl md:text-3xl cursor-pointer"
+        >
+          Licenses{" "}
+          <i
+            className={`fa-solid ${
+              licensesOpen ? "fa-chevron-up" : "fa-chevron-down"
+            }`}
+          ></i>
         </h2>
 
-        <div className={`${licensesOpen ? "block" : "hidden"} mt-2 grid grid-cols-2 gap-4 lg:grid-cols-4`}>
+        <div
+          className={`${
+            licensesOpen ? "block" : "hidden"
+          } mt-2 grid grid-cols-2 gap-4 lg:grid-cols-4`}
+        >
           <div className="p-2 bg-beige rounded-md flex justify-center items-center">
             <p className="text-center">Doctorate in Social Work</p>
           </div>
@@ -166,11 +237,23 @@ export default function Home() {
       </div>
 
       <div className="mt-5 lg:mt-14">
-        <h2 onClick={() => setCertificationsOpen(!certificationsOpen)} className="font-bold text-xl md:text-3xl cursor-pointer">
-          Certifications <i className={`fa-solid ${certificationsOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+        <h2
+          onClick={() => setCertificationsOpen(!certificationsOpen)}
+          className="font-bold text-xl md:text-3xl cursor-pointer"
+        >
+          Certifications{" "}
+          <i
+            className={`fa-solid ${
+              certificationsOpen ? "fa-chevron-up" : "fa-chevron-down"
+            }`}
+          ></i>
         </h2>
 
-        <div className={`${certificationsOpen ? "block" : "hidden"} mt-2 grid grid-cols-2 gap-4 lg:grid-cols-4`}>
+        <div
+          className={`${
+            certificationsOpen ? "block" : "hidden"
+          } mt-2 grid grid-cols-2 gap-4 lg:grid-cols-4`}
+        >
           <div className="p-2 bg-beige rounded-md flex justify-center items-center">
             <p className="text-center">
               Red Cross Disaster & Mental Health Service Certificate
@@ -192,6 +275,13 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      <Modal open={openModal} closeModal={setOpenModal}>
+        <p className="font-bold text-2xl text-center mb-5">
+          {updateInfo.title}
+        </p>
+        <p>{updateInfo.content}</p>
+      </Modal>
     </div>
   );
 }

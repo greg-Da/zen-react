@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
 import "./CardStore.css";
+import checkAuth from "../../utils/checkAuth";
 
 export default function CardStore({
-  data: { id, image, title, price, description }, setCart
+  data: { id, image, title, price, description },
+  setCart,
 }) {
-
-    function addToCart() {
-        setCart(prev => [...prev, { id, image, title, price, description }])
-    }
+  function addToCart() {
+    setCart((prev) => [...prev, { id, image, title, price, description }]);
+  }
 
   return (
     <div className="border-2 border-black rounded-lg">
@@ -26,12 +27,21 @@ export default function CardStore({
 
         <div className="flex justify-between items-center">
           <p className="clamp-2 h-12 w-5/6">{description}</p>
-          <div
-            onClick={() => addToCart()}
-            className="cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center"
-          >
-            <i className="fa-solid fa-cart-arrow-down text-white text-xl"></i>
-          </div>
+
+          {checkAuth() ? (
+            <div
+              onClick={() => addToCart()}
+              className="cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center"
+            >
+              <i className="fa-solid fa-cart-arrow-down text-white text-xl"></i>
+            </div>
+          ) : (
+            <Link to={"/login"}>
+              <div className="cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center">
+                <i className="fa-solid fa-cart-arrow-down text-white text-xl"></i>
+              </div>
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { AlertContext } from "../../components/Alert";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logIn } from "../../state/auth/authSlice";
-import './style.css'
+import "./style.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -33,24 +33,26 @@ export default function Login() {
     })
       .then((res) => {
         if (res.ok) {
-          const data = res.json();
           Cookies.set("token", res.headers.get("Authorization"), {
             expires: 2,
             sameSite: "strict",
           });
-          return data;
-        } else {
-          throw new Error("Something went wrong");
         }
+        const data = res.json();
+        return data;
       })
       .then((data) => {
-        setAlert({ text: "Registered successfully", type: "success" });
-        dispatch(logIn(data.user));
-        navigate("/");
+        console.log(data);
+        if (data.status.code !== 200) {
+          throw new Error(data.status.message);
+        } else {
+          setAlert({ text: "Registered successfully", type: "success" });
+          dispatch(logIn(data.data));
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.error(err);
-        console.error(err.response);
         setAlert({ text: err.message, type: "error" });
       });
   }

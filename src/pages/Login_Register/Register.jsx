@@ -10,17 +10,23 @@ import { logIn } from "../../state/auth/authSlice";
 import './style.css'
 
 export default function Register() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password_confirmation, setPassword_confirmation] = useState("");
+  const [password, setPassword] = useState("!1Qwerty");
+  const [password_confirmation, setPassword_confirmation] = useState("!1Qwerty");
   const { setAlert } = useContext(AlertContext);
 
   let dispatch = useDispatch();
   let navigate = useNavigate();
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault()
+
     const data = {
       user: {
+        first_name: firstName,
+        last_name: lastName,
         email,
         password,
         password_confirmation,
@@ -35,19 +41,24 @@ export default function Register() {
     })
       .then((res) => {
         if (res.ok) {
-          const data = res.json();
           Cookies.set("token", res.headers.get("Authorization"), {
             expires: 2,
             sameSite: "strict",
           });
-          return data;
-        } else {
-          throw new Error("Something went wrong");
-        }
+        } 
+        const data = res.json();
+        return data;
+
       })
       .then((data) => {
+        console.log(data)
+
+        if(data.status.code !== 200){
+          throw new Error(data.status.message)
+        }
+
         setAlert({ text: "Registered successfully", type: "success" });
-        dispatch(logIn(data.user));
+        dispatch(logIn(data.data));
         navigate("/");
       })
       .catch((err) => {
@@ -62,6 +73,18 @@ export default function Register() {
         <Card className="p-10 border-2 border-black">
           <h1 className="text-center mb-5 font-bold text-3xl">Register</h1>
           <form className="grid gap-y-5">
+            <TextField
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              type="text"
+              placeholder="Enter your first name"
+            />
+            <TextField
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              type="text"
+              placeholder="Enter your last name"
+            />
             <TextField
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -81,7 +104,7 @@ export default function Register() {
               placeholder="Enter your password confirmation"
             />
             <div className="flex justify-center">
-              <button className="bg-green px-3 py-2 rounded-full text-white font-bold" onClick={() => handleSubmit()}>
+              <button className="bg-green px-3 py-2 rounded-full text-white font-bold" onClick={(e) => handleSubmit(e)}>
                 Register
               </button>
             </div>

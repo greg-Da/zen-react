@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Navbar from "./components/Navbar";
 import Register from "./pages/Login_Register/Register";
 import Login from "./pages/Login_Register/Login";
@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (!currentUser.id && token !== undefined) {
-      fetch("http://localhost:3000/member-data", {
+      fetch("http://localhost:3000/current_user", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -43,6 +43,7 @@ function App() {
           return response.json();
         })
         .then((data) => {
+          console.log(data)
           dispatch(logIn(data.user));
         })
         .catch((err) => {
