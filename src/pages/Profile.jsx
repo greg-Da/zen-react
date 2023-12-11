@@ -1,11 +1,18 @@
-import { useSelector } from "react-redux"
+import { useEffect } from 'react'
+import { useState } from 'react'
 
 export default function Profile(){
 
-    const user = useSelector(state => state.auth.user)
-    console.log(user)
+    const [user, setuser] = useState({})
+
+    useEffect(()=>{
+        fetch('')
+        .then(res => res.json())
+        .then(data => setuser(data))
+        .catch(err => console.log(err))
+    },[])
 
     return(
-        <h1>Profile {user.email}</h1>
+        <h1>{user.first_name} {user.last_name}</h1>
     )
 }

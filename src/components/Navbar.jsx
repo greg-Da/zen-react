@@ -19,7 +19,7 @@ Navbar.proptypes = {
   onSwitchChange: PropTypes.func.isRequired,
 };
 
-export default function Navbar({ mode, onSwitchChange }) {
+export default function Navbar() {
   let navigate = useNavigate();
   let dispatch = useDispatch();
 
@@ -39,8 +39,10 @@ export default function Navbar({ mode, onSwitchChange }) {
     setOpenDropdown(false);
   };
 
-  const handleLogout = async (e) => {
-    await handleClose(e);
+  const handleLogout = async (e, mobile) => {
+    e.preventDefault();
+
+    mobile ? setUnfolded(false) : await handleClose(e);
     dispatch(logOut());
 
     navigate("/");
@@ -57,7 +59,7 @@ export default function Navbar({ mode, onSwitchChange }) {
   }, [openDropdown]);
 
   return (
-    <nav className="absolute top-0 w-full min-h-[5vh] bg-black text-white p-2 shadow-lg border-b-2 border-black">
+    <nav className="absolute top-0 z-50 w-full min-h-[5vh] bg-green text-white p-2 shadow-lg">
       <div className="flex justify-between">
         <div>
           <Link className="font-bold text-3xl" to={"/"}>
@@ -66,19 +68,11 @@ export default function Navbar({ mode, onSwitchChange }) {
         </div>
 
         <div className="flex">
-          {mode === true ? (
-            <i
-              onClick={() => onSwitchChange(!mode)}
-              className="my-auto mr-2 text-xl fa-solid fa-sun"
-            ></i>
-          ) : (
-            <i
-              onClick={() => onSwitchChange(!mode)}
-              className="my-auto mr-2 text-xl fa-solid fa-moon"
-            ></i>
-          )}
+          <div className="hidden md:flex md:items-center mt-[0.4em]">
+            <Link className="mr-2" to={"/store"}>
+              Store
+            </Link>
 
-          <div className="hidden md:block mt-[0.4em]">
             {checkAuth() ? (
               <Stack direction="row" spacing={2}>
                 <div
@@ -89,13 +83,6 @@ export default function Navbar({ mode, onSwitchChange }) {
                   aria-haspopup="true"
                   onClick={handleToggle}
                 >
-                  {/* ///////////////////////////////
-              {currentUser.avatar ? 
-              <img src={avatar} alt="Profile Pic" />
-              :
-              ...
-            }
-              /////////////////////////////// */}
                   <i className="text-3xl cursor-pointer mt-1 mr-2 fa-solid fa-circle-user"></i>
                 </div>
                 <Popper
@@ -125,7 +112,7 @@ export default function Navbar({ mode, onSwitchChange }) {
                             <MenuItem onClick={handleClose}>
                               <Link to={"/profile"}>Profile</Link>
                             </MenuItem>
-                            <MenuItem onClick={(e) => handleLogout(e)}>
+                            <MenuItem onClick={(e) => handleLogout(e, false)}>
                               Logout
                             </MenuItem>
                           </MenuList>
@@ -168,17 +155,29 @@ export default function Navbar({ mode, onSwitchChange }) {
           unfolded ? "block" : "hidden"
         } flex z-[49] flex-col items-center`}
       >
+        <Link onClick={() => setUnfolded(false)} to={"/store"}>
+          Store
+        </Link>
+
         {checkAuth() ? (
           <>
-            <Link to={"/profile"}>Profile</Link>
-            <Link onClick={(e) => handleLogout(e)}>Log Out</Link>
+            <Link onClick={() => setUnfolded(false)} to={"/profile"}>
+              Profile
+            </Link>
+            <Link onClick={(e) => handleLogout(e, true)}>Log Out</Link>
           </>
         ) : (
           <>
-            <Link className="my-2" to={"/login"}>
+            <Link
+              onClick={() => setUnfolded(false)}
+              className="my-2"
+              to={"/login"}
+            >
               Sign In
             </Link>
-            <Link to={"/register"}>Sign Up</Link>
+            <Link onClick={() => setUnfolded(false)} to={"/register"}>
+              Sign Up
+            </Link>
           </>
         )}
       </div>

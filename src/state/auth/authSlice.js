@@ -13,7 +13,8 @@ const auth = createSlice({
         logIn: (state, action) => {
             state.user = {
                 id: action.payload.id,
-                name: action.payload.username,
+                first_name: action.payload.first_name,
+                last_name: action.payload.last_name,
                 email: action.payload.email,
             }
         },
