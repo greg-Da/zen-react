@@ -7,7 +7,7 @@ export default function CardStore({
   setCart,
 }) {
   function addToCart() {
-    setCart((prev) => [...prev, { id, image, title, price, description }]);
+    setCart({ id, image, title, price, description })
   }
 
   return (

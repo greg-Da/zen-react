@@ -8,14 +8,14 @@ import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AlertProvider } from "./components/Alert";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { logIn } from "./state/auth/authSlice";
 import checkAuth from "./utils/checkAuth";
 import HomeLoggedIn from "./pages/HomeLoggedIn";
-import Store from "./pages/Store";
+import Store from "./pages/Store/Store";
 import Chat from "./pages/Chat/Chat";
 import Today from "./pages/Admin/Today";
 import Calendar from "./pages/Admin/Calendar/Calendar";
@@ -23,9 +23,14 @@ import AddArticles from "./pages/Admin/AddArticles";
 import Request from "./pages/Admin/Request";
 import Invoice from "./pages/Admin/Invoice";
 import Product from "./pages/Product";
+import AppointmentNew from "./pages/AppointmentNew";
+import AdminRoute from "./components/AdminRoute";
+import AddUpdates from "./pages/Admin/AddUpdates";
+import UpdateArticles from "./pages/Admin/UpdateArticles";
+import UpdateUpdates from "./pages/Admin/UpdateUpdates";
+import Updates from "./pages/Admin/Updates";
 
 function App() {
-
   const currentUser = useSelector((state) => state.auth.user);
   let dispatch = useDispatch();
 
@@ -43,25 +48,28 @@ function App() {
           return response.json();
         })
         .then((data) => {
-          console.log(data)
-          dispatch(logIn(data.user));
+          if (data.status.code === 200) {
+            dispatch(logIn(data.data));
+          }else{
+            Cookies.remove("token");
+          }
         })
-        .catch((err) => {
-          console.error(err);
-        });
+
     }
   }, [currentUser, dispatch]);
 
-
   return (
     <BrowserRouter>
-      <Navbar/>
+      <Navbar />
       <main id="main" className="min-h-[89.7vh] mt-[5.4vh] flex">
         <AlertProvider>
           <Routes>
-            <Route path="/" element={checkAuth() ? <HomeLoggedIn/> : <Home />} />
+            <Route
+              path="/"
+              element={currentUser.admin ? <Today /> : checkAuth() ? <HomeLoggedIn /> : <Home />}
+            />
             {/* <Route path="/" element={<HomeLoggedIn/>} /> */}
-            
+
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route
@@ -82,16 +90,83 @@ function App() {
               }
             /> */}
             <Route path="/chat" element={<Chat />} />
-
+            <Route path="appointment/new" element={<AppointmentNew />} />
 
             <Route path="/store" element={<Store />} />
-            <Route path="/product/:1" element={<Product />} />
+            <Route path="/product/:id" element={<Product />} />
 
-            <Route path="/admin/today" element={<Today />} />
-            <Route path="/admin/calendar" element={<Calendar />} />
-            <Route path="/admin/addArticles" element={<AddArticles />} />
-            <Route path="/admin/request" element={<Request />} />
-            <Route path="/admin/invoices" element={<Invoice />} />
+            <Route
+              path="/admin/today"
+              element={
+                <AdminRoute>
+                  <Today />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/calendar"
+              element={
+                <AdminRoute>
+                  <Calendar />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/addArticles"
+              element={
+                <AdminRoute>
+                  <AddArticles />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/updateArticles/:id"
+              element={
+                <AdminRoute>
+                  <UpdateArticles />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/updates"
+              element={
+                <AdminRoute>
+                  <Updates />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/addUpdate"
+              element={
+                <AdminRoute>
+                  <AddUpdates />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/updateUpdate/:id"
+              element={
+                <AdminRoute>
+                  <UpdateUpdates />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/request"
+              element={
+                <AdminRoute>
+                  <Request />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/invoices"
+              element={
+                <AdminRoute>
+                  <Invoice />
+                </AdminRoute>
+              }
+            />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

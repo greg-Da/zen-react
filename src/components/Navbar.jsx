@@ -9,7 +9,7 @@ import MenuList from "@mui/material/MenuList";
 import Stack from "@mui/material/Stack";
 import { useState, useRef, useEffect } from "react";
 import checkAuth from "../utils/checkAuth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../state/auth/authSlice";
 import "./Navbar.css";
@@ -23,12 +23,21 @@ export default function Navbar() {
   let navigate = useNavigate();
   let dispatch = useDispatch();
 
+  const currentUser = useSelector((state) => state.auth.user);
+  
+
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [openAdminDropdown, setOpenAdminDropdown] = useState(false);
   const [unfolded, setUnfolded] = useState(false);
   const anchorRef = useRef(null);
+  const adminRef = useRef(null);
 
   const handleToggle = () => {
     setOpenDropdown((prevOpen) => !prevOpen);
+  };
+
+  const handleToggleAdmin = () => {
+    setOpenAdminDropdown((prevOpen) => !prevOpen);
   };
 
   const handleClose = (event) => {
@@ -37,6 +46,14 @@ export default function Navbar() {
     }
 
     setOpenDropdown(false);
+  };
+
+  const handleCloseAdmin = (event) => {
+    if (adminRef.current && adminRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpenAdminDropdown(false);
   };
 
   const handleLogout = async (e, mobile) => {
@@ -58,6 +75,15 @@ export default function Navbar() {
     prevOpen.current = openDropdown;
   }, [openDropdown]);
 
+  const prevOpenAdmin = useRef(openAdminDropdown);
+  useEffect(() => {
+    if (prevOpenAdmin.current === true && openAdminDropdown === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpenAdmin.current = openAdminDropdown;
+  }, [openAdminDropdown]);
+
   return (
     <nav className="absolute top-0 z-50 w-full min-h-[5vh] bg-green text-white p-2 shadow-lg">
       <div className="flex justify-between">
@@ -73,6 +99,77 @@ export default function Navbar() {
               Store
             </Link>
 
+            {currentUser.admin && (
+              <Stack direction="row" spacing={2}>
+                <div
+                  ref={adminRef}
+                  id="admin-button"
+                  aria-controls={openAdminDropdown ? "admin-menu" : undefined}
+                  aria-expanded={openAdminDropdown ? "true" : undefined}
+                  aria-haspopup="true"
+                  onClick={handleToggleAdmin}
+                >
+                  <p className="mr-2 cursor-pointer">
+                    Admin <i className="fa-solid fa-chevron-down"></i>
+                  </p>
+                </div>
+                <Popper
+                  open={openAdminDropdown}
+                  anchorEl={adminRef.current}
+                  role={undefined}
+                  placement="bottom-start"
+                  transition
+                  disablePortal
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      style={{
+                        transformOrigin:
+                          placement === "bottom-start"
+                            ? "left top"
+                            : "left bottom",
+                      }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={handleCloseAdmin}>
+                          <MenuList
+                            id="admin-menu"
+                            aria-labelledby="admin-button"
+                          >
+                            <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/today"}>
+                                Today's appointments
+                              </Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/calendar"}>Calendar</Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/request"}>
+                                Appointments request
+                              </Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/invoices"}>Invoices</Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/addArticles"}>
+                                Add articles
+                              </Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/updates"}>Updates</Link>
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
+              </Stack>
+            )}
+
             {checkAuth() ? (
               <Stack direction="row" spacing={2}>
                 <div
@@ -86,7 +183,7 @@ export default function Navbar() {
                   <i className="text-3xl cursor-pointer mt-1 mr-2 fa-solid fa-circle-user"></i>
                 </div>
                 <Popper
-                  openDropdown={openDropdown}
+                  open={openDropdown}
                   anchorEl={anchorRef.current}
                   role={undefined}
                   placement="bottom-start"
@@ -155,27 +252,81 @@ export default function Navbar() {
           unfolded ? "block" : "hidden"
         } flex z-[49] flex-col items-center`}
       >
-        <Link onClick={() => setUnfolded(false)} to={"/store"}>
+        <Link
+          className="font-bold my-2"
+          onClick={() => setUnfolded(false)}
+          to={"/store"}
+        >
           Store
         </Link>
+        {currentUser.admin && (
+          <>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/today"}
+            >
+              Today's appointments
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/calendar"}
+            >
+              Calendar
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/request"}
+            >
+              Appointments request
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/invoices"}
+            >
+              Invoices
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/addArticles"}
+            >
+              Add articles
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/updates"}
+            >
+              Updates
+            </Link>
+          </>
+        )}
 
         {checkAuth() ? (
           <>
-            <Link onClick={() => setUnfolded(false)} to={"/profile"}>
+            <Link className="my-2 font-bold" onClick={() => setUnfolded(false)} to={"/profile"}>
               Profile
             </Link>
-            <Link onClick={(e) => handleLogout(e, true)}>Log Out</Link>
+            <Link className="my-2 font-bold" onClick={(e) => handleLogout(e, true)}>Log Out</Link>
           </>
         ) : (
           <>
             <Link
               onClick={() => setUnfolded(false)}
-              className="my-2"
+              className="my-2 font-bold"
               to={"/login"}
             >
               Sign In
             </Link>
-            <Link onClick={() => setUnfolded(false)} to={"/register"}>
+            <Link
+              className="font-bold"
+              onClick={() => setUnfolded(false)}
+              to={"/register"}
+            >
               Sign Up
             </Link>
           </>

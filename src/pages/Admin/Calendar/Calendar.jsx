@@ -16,6 +16,7 @@ export default function CalendarPage() {
     },
   ]);
   const [date, setDate] = useState(new Date())
+  console.log(date)
 
 //   useEffect(() => {
 //     fetch("")

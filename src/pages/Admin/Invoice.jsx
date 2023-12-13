@@ -4,31 +4,25 @@ import { useState } from "react";
 
 export default function Invoice() {
   const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-    },
-    {
-      id: 2,
-      first_name: "Jane",
-      last_name: "Dae",
-    },
-  ]);
+  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(0);
   const [price, setPrice] = useState("");
   const [nmbSession, setNmbSession] = useState("");
 
-  //   useEffect(() => {
-  //     fetch("")
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         setUsers(data);
-  //         setFilteredUsers(data);
-  //       });
-  //   }, []);
+    useEffect(() => {
+      fetch("http://localhost:3000/users",{
+        headers: {
+          Authorization: Cookies.get("token")
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          setUsers(data);
+          setFilteredUsers(data);
+        });
+    }, []);
 
   useEffect(() => {
     if (search === "") {
@@ -51,7 +45,7 @@ export default function Invoice() {
   }
 
   function handleSubmit(id) {
-    fetch("", {
+    fetch(`http://localhost:3000/users/${id}/invoices`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
