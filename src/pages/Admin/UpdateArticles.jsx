@@ -31,18 +31,21 @@ export default function UpdateArticles() {
   }, [id]);
 
   function handleSubmit() {
+    const data = new FormData();
+    data.append("item[title]", title);
+    data.append("item[description]", description);
+    data.append("item[price]", price);
+    data.append("item[stock]", stock);
+    images.forEach((image) => {
+      data.append(`item[images][]`, image);
+    });
+
     fetch(`http://localhost:3000/items/${id}`, {
-      method: "UPDATE",
+      method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
         Authorization: Cookies.get("token"),
       },
-      body: JSON.stringify({
-        title,
-        price: parseInt(price),
-        stock: parseInt(stock),
-        description,
-      }),
+      body: data
     })
       .then((res) => res.json())
       .then((data) => {

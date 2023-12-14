@@ -10,8 +10,10 @@ export default function UpdateUpdates() {
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
   const [displayImage, setDisplayImage] = useState("");
+  const [imageChanged, setImageChanged] = useState(false);
+
   const { id } = useParams();
-  let navigate = useNavigate;
+  let navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:3000/updates/${id}`)
@@ -32,23 +34,31 @@ export default function UpdateUpdates() {
 
   function handleSubmit() {
     const data = new FormData();
-    data.append("title", title);
-    data.append("content", content);
-    data.append("image", image);
+    data.append("update[title]", title);
+    data.append("update[content]", content);
+    if (imageChanged) {
+      data.append("update[image]", image);
+    }
 
     fetch(`http://localhost:3000/updates/${id}`, {
-      method: "UPDATE",
+      method: "PATCH",
       headers: {
         Authorization: Cookies.get("token"),
       },
       body: data,
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => {
+        if (data.status.code === 200) {
+          console.log(data);
+          navigate("/admin/updates");
+        }
+      })
       .catch((err) => console.log(err));
   }
 
   function addImage(e) {
+    setImageChanged(true);
     setImage(e.target.files[0]);
     setDisplayImage(URL.createObjectURL(e.target.files[0]));
   }
@@ -58,11 +68,29 @@ export default function UpdateUpdates() {
     setDisplayImage("");
   }
 
+  function handleDelete() {
+    fetch(`http://localhost:3000/updates/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: Cookies.get("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        navigate("/admin/updates");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   return (
     <div className="py-4 px-4 lg:px-64 w-full">
       <h1 className="font-bold text-3xl">Update {title}</h1>
 
-      {image === "" ? (
+      {image === "" || image === undefined ? (
         <div className="flex justify-center">
           <FileInput uploadFile={addImage} />
         </div>
@@ -98,11 +126,17 @@ export default function UpdateUpdates() {
       <div className="flex justify-center">
         <button
           onClick={() => handleSubmit()}
-          className="bg-green rounded-full py-1 px-3 text-xl font-bold text-white"
+          className="bg-green rounded-full py-1 px-3 text-2xl font-bold text-white"
         >
           Submit
         </button>
       </div>
+      <button
+        onClick={() => handleDelete()}
+        className="bg-red-500 text-white rounded-full py-2 px-5 text-2xl font-bold"
+      >
+        Delete
+      </button>
     </div>
   );
 }
