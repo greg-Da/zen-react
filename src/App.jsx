@@ -20,7 +20,6 @@ import Chat from "./pages/Chat/Chat";
 import Today from "./pages/Admin/Today";
 import Calendar from "./pages/Admin/Calendar/Calendar";
 import AddArticles from "./pages/Admin/AddArticles";
-import Request from "./pages/Admin/Request";
 import Invoice from "./pages/Admin/Invoice";
 import Product from "./pages/Product";
 import AppointmentNew from "./pages/AppointmentNew";
@@ -29,6 +28,9 @@ import AddUpdates from "./pages/Admin/AddUpdates";
 import UpdateArticles from "./pages/Admin/UpdateArticles";
 import UpdateUpdates from "./pages/Admin/UpdateUpdates";
 import Updates from "./pages/Admin/Updates";
+import AppointmentShow from "./pages/AppointmentShow";
+import AppointmentUpdate from "./pages/AppointmentUpdate";
+import AppointmentRequest from "./pages/Admin/AppointmentRequest";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -50,11 +52,10 @@ function App() {
         .then((data) => {
           if (data.status.code === 200) {
             dispatch(logIn(data.data));
-          }else{
+          } else {
             Cookies.remove("token");
           }
-        })
-
+        });
     }
   }, [currentUser, dispatch]);
 
@@ -66,9 +67,16 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={currentUser.admin ? <Today /> : checkAuth() ? <HomeLoggedIn /> : <Home />}
+              element={
+                currentUser.admin ? (
+                  <Today />
+                ) : checkAuth() ? (
+                  <HomeLoggedIn />
+                ) : (
+                  <Home />
+                )
+              }
             />
-            {/* <Route path="/" element={<HomeLoggedIn/>} /> */}
 
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
@@ -77,6 +85,24 @@ function App() {
               element={
                 <PrivateRoute>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/meeting/:id"
+              element={
+                <PrivateRoute>
+                  <AppointmentShow />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/reschedule/:id"
+              element={
+                <PrivateRoute>
+                  <AppointmentUpdate />
                 </PrivateRoute>
               }
             />
@@ -155,7 +181,7 @@ function App() {
               path="/admin/request"
               element={
                 <AdminRoute>
-                  <Request />
+                  <AppointmentRequest />
                 </AdminRoute>
               }
             />

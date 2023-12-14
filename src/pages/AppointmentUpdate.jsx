@@ -1,49 +1,39 @@
-import { useState } from "react";
-import Calendar from "react-calendar";
-import TimePicker from "../components/TimePicker/TimePicker";
-import { useSelector } from "react-redux";
-import { useContext } from "react";
-import { AlertContext } from "../components/Alert";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import Calendar from "react-calendar";
+import TimePicker from "../components/TimePicker/TimePicker";
+import { useContext } from "react";
+import { AlertContext } from "../components/Alert";
 
-export default function AppointmentNew() {
+export default function AppointmentUpdate() {
   const [data, setData] = useState({});
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("9");
-  const [sesionsLeft, setSessionLeft] = useState(true)
-  const [appointment_type, setAppointmentType] = useState("Family");
+  const [appointment_type, setAppointmentType] = useState("");
 
-  const currentUser = useSelector((state) => state.auth.user);
+  let currentUser = useSelector((state) => state.auth.user);
+  let { id } = useParams();
 
   const { setAlert } = useContext(AlertContext);
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/available_appointment`, {
-      method: "GET",
+    fetch(`http://localhost:3000/users/${currentUser.id}/appointments/${id}`, {
       headers: {
         Authorization: Cookies.get("token"),
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        if (data.status.code === 200 && data.data !== false) {
-          setData(data.data);
-        } else if (data.status.code === 200 && data.data === false) {
-          setSessionLeft(data.data);
-          console.log(data);
-        } else {
-          throw new Error(data.status.message);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        setAlert({ text: err.message, type: "error" });
+        setData(data.data);
+        setDate(new Date(data.data.datetime));
+        setAppointmentType(data.data.appointment_type);
       });
-  }, [setAlert, currentUser]);
+  }, [currentUser, id]);
 
   function handleSubmit() {
     let newDate = new Date(date.setHours(parseInt(time.split(":")[0])));
@@ -51,41 +41,48 @@ export default function AppointmentNew() {
     setDate(newDate);
     console.log(date);
 
-    fetch(
-      `http://localhost:3000/users/${currentUser.id}/appointments/${data.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: Cookies.get("token"),
-        },
-        body: JSON.stringify({
-          datetime: date,
-          appointment_type,
-          status: "unconfirmed",
-        }),
-      }
-    )
+    fetch(`http://localhost:3000/users/${currentUser.id}/appointments/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: Cookies.get("token"),
+      },
+      body: JSON.stringify({
+        datetime: date,
+        appointment_type,
+        status: "unconfirmed",
+      }),
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data.status.code === 200) {
           navigate("/");
-          setAlert({ text: "The request has been sent", type: "success" });
         } else {
           setAlert({ text: data.status.message, type: "error" });
         }
       });
   }
 
+  function lessThan2Days() {
+    let currentDate = new Date(data.datetime);
+    currentDate = new Date(currentDate.setHours(currentDate.getHours() - 1));
+    let today = new Date();
+
+    if (currentDate - today < 172800000) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   return (
     <div className="py-4 px-4 lg:px-64 w-full">
-      {sesionsLeft === false ? (
-        <div className="bg-gray-300 p-3 font-bold text-2xl rounded-md text-center">
-          <h1>Contact your doctor to get more session</h1>
-        </div>
+      {lessThan2Days() ? (
+        <h1 className="text-2xl font-bold">
+          Rescheduling is not possible at this date
+        </h1>
       ) : (
         <>
-          <h1 className="text-2xl font-bold">New your appointment</h1>
+          <h1 className="text-2xl font-bold">Reschedule your appointment</h1>
           <div className="bg-grey-300 rounded-md p-3">
             <div className="w-full flex flex-col items-center justify-center">
               <Calendar
