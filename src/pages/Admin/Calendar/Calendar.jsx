@@ -1,47 +1,66 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import CardMeeting from "../../../components/CardMeeting";
-import Calendar from 'react-calendar'
-import 'react-calendar/dist/Calendar.css';
-import './Calendar.css'
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "./Calendar.css";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export default function CalendarPage() {
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      time: "10:00 AM",
-      type: "Life Coaching",
-    },
-  ]);
-  const [date, setDate] = useState(new Date())
-  console.log(date)
+  const [appointments, setAppointments] = useState([]);
+  const [date, setDate] = useState(new Date());
+  const currentUser = useSelector((state) => state.auth.user);
 
-//   useEffect(() => {
-//     fetch("")
-//       .then((res) => res.json())
-//       .then((data) => {
-//         setAppointments(data);
-//         console.log(data);
-//       });
-//   }, []);
+  useEffect(() => {
+    fetch(
+      `http://localhost:3000/users/${
+        currentUser.id
+      }/appointments/by_date/${date.getFullYear()}-${
+        date.getMonth() + 1
+      }-${date.getDate()}
+    `,
+      {
+        headers: {
+          Authorization: Cookies.get("token"),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data)
+        setAppointments(data.data);
+      });
+  }, [currentUser, date]);
+
+  function handleDateChange(date) {
+    setDate(date);
+  }
 
   return (
     <div className="py-4 px-4 lg:px-64 w-full">
       <div className="flex justify-center">
-        <Calendar value={date} onChange={setDate} calendarType="US" />
+        <Calendar value={date} onChange={handleDateChange} calendarType="US" />
       </div>
 
       <div>
-        <h2 className="mt-5 font-bold text-2xl">Apointments for {date.getMonth()+1}/{date.getDate()}/{date.getFullYear()}</h2>
+        <h2 className="mt-5 font-bold text-2xl">
+          Apointments for {date.getMonth() + 1}/{date.getDate()}/
+          {date.getFullYear()}
+        </h2>
         {appointments.map((item) => (
           <div key={item.id}>
             <CardMeeting
               data={{
-                upLeft: item.time,
-                upRight: `${item.first_name} ${item.last_name}`,
-                down: item.type,
+                upLeft: item.datetime
+                  .split("T")
+                  .pop()
+                  .split(".")
+                  .shift()
+                  .slice(0, -3),
+                upRight: item.other_user_name,
+                type: item.appointment_type,
+                id: item.id,
               }}
             />
           </div>

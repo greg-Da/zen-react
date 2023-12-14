@@ -2,3 +2,7 @@
     background-color: gray !important;
 }
 
+.react-calendar__tile--active{
+    color: black !important;
+    background-color: lightskyblue !important;
+}
