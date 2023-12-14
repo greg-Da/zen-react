@@ -12,7 +12,6 @@ export default function HomeLoggedIn() {
   useEffect(() => {
     fetch(`http://localhost:3000/users/${currentUser.id}/invoices`, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: Cookies.get("token"),
       },
     })
