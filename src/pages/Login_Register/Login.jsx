@@ -24,7 +24,7 @@ export default function Login() {
         password,
       },
     };
-    fetch("http://localhost:3000/users/sign_in", {
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users/sign_in", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

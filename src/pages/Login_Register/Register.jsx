@@ -32,7 +32,7 @@ export default function Register() {
         password_confirmation,
       },
     };
-    fetch("http://localhost:3000/users", {
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -15,7 +15,7 @@ export default function Invoice() {
   const { setAlert } = useContext(AlertContext);
 
   useEffect(() => {
-    fetch("http://localhost:3000/users", {
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users", {
       headers: {
         Authorization: Cookies.get("token"),
       },
@@ -51,7 +51,7 @@ export default function Invoice() {
   }
 
   function handleSubmit(id) {
-    fetch(`http://localhost:3000/users/${id}/invoices`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${id}/invoices`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -14,7 +14,7 @@ export default function Home() {
   const [updateInfo, setUpdateInfo] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3000/updates")
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/updates")
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -74,7 +74,7 @@ export default function Home() {
             <div className="w-full relative overflow-hidden pt-[56.25%]">
               <iframe
                 className="absolute top-0 left-0 right-0 bottom-0 w-full h-full"
-                src="https://www.youtube.com/embed/Tey_K-nCitk?si=RzD8nHj9J08UNxzp"
+                src="https://www.youtube.com/embed/dLaCqh56a0Y?si=L4v4m2uyFie8oLVj"
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen

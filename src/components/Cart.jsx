@@ -8,7 +8,7 @@ export default function Cart({ openModal, setOpenModal, cart, setCart }) {
   function removeFromCart(id) {
     const index = cart.findIndex((i) => i.item_id === id);
 
-    fetch(`http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function Cart({ openModal, setOpenModal, cart, setCart }) {
   function updateCartItem(value, id) {
     console.log(value);
     const index = cart.findIndex((i) => i.item_id === id);
-    fetch(`http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

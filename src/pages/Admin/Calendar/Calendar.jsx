@@ -14,7 +14,7 @@ export default function CalendarPage() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/users/${
+      `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${
         currentUser.id
       }/appointments/by_date/${date.getFullYear()}-${
         date.getMonth() + 1

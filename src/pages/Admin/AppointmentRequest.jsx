@@ -12,7 +12,7 @@ export default function AppointmentRequest() {
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/pending_appointments`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/pending_appointments`, {
       method: "GET",
       headers: {
         Authorization: Cookies.get("token"),
@@ -34,7 +34,7 @@ export default function AppointmentRequest() {
   }, [setAlert]);
 
   function updateRequest(accept, id) {
-    fetch(`http://localhost:3000/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

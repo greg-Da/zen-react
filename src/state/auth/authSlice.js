@@ -19,7 +19,7 @@ const auth = createSlice({
     },
     logOut: (state) => {
       state.user = {};
-      fetch("http://localhost:3000/users/sign_out", {
+      fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users/sign_out", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

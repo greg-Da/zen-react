@@ -27,7 +27,7 @@ export default function AddItems() {
     formData.append("item[stock]", stock);
     formData.append("item[description]", description);
 
-    fetch("http://localhost:3000/items", {
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/items", {
       method: "POST",
       headers: {
         Authorization: Cookies.get("token"),

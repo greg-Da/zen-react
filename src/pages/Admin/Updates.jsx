@@ -7,7 +7,7 @@ export default function Updates() {
   const [updates, setUpdates] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/updates")
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/updates")
       .then((res) => res.json())
       .then((data) => {
         if (data.status.code === 200) {
@@ -20,7 +20,7 @@ export default function Updates() {
   }, []);
 
   function handleDelete(id) {
-    fetch(`http://localhost:3000/updates/${id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: Cookies.get("token"),

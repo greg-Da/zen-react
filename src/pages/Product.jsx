@@ -18,7 +18,7 @@ export default function Product() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/items/${id}`)
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -36,7 +36,7 @@ export default function Product() {
 
   useEffect(() => {
     if (currentUser.id) {
-      fetch(`http://localhost:3000/cart`, {
+      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart`, {
         headers: {
           Authorization: Cookies.get("token"),
         },
@@ -58,7 +58,7 @@ export default function Product() {
       setCart(updatedCart);
 
       fetch(
-        `http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`,
+        `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`,
         {
           method: "PATCH",
           headers: {
@@ -81,7 +81,7 @@ export default function Product() {
         })
         .catch((err) => console.error(err));
     } else {
-      fetch(`http://localhost:3000/items/${item.id}/cart_items`, {
+      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${item.id}/cart_items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

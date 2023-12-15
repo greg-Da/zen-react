@@ -16,7 +16,7 @@ const CheckoutReturn = () => {
     const sessionId = urlParams.get("session_id");
 
     fetch(
-      `http://localhost:3000/${type}/${id}/session-status?session_id=${sessionId}`
+      `https://zen-counseling-production-4a7de6447247.herokuapp.com/${type}/${id}/session-status?session_id=${sessionId}`
     )
       .then((res) => res.json())
       .then((data) => {

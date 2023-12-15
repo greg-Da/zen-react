@@ -154,6 +154,9 @@ export default function Navbar() {
                               <Link to={"/admin/invoices"}>Invoices</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/contacts"}>Contacts</Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
                               <Link to={"/admin/addArticles"}>
                                 Add articles
                               </Link>
@@ -206,9 +209,9 @@ export default function Navbar() {
                             id="composition-menu"
                             aria-labelledby="composition-button"
                           >
-                            <MenuItem onClick={handleClose}>
+                            {/* <MenuItem onClick={handleClose}>
                               <Link to={"/profile"}>Profile</Link>
-                            </MenuItem>
+                            </MenuItem> */}
                             <MenuItem onClick={(e) => handleLogout(e, false)}>
                               Logout
                             </MenuItem>
@@ -292,6 +295,13 @@ export default function Navbar() {
             <Link
               className="font-bold my-2"
               onClick={() => setUnfolded(false)}
+              to={"/admin/contacts"}
+            >
+              Contacts
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
               to={"/admin/addArticles"}
             >
               Add articles
@@ -308,9 +318,9 @@ export default function Navbar() {
 
         {checkAuth() ? (
           <>
-            <Link className="my-2 font-bold" onClick={() => setUnfolded(false)} to={"/profile"}>
+            {/* <Link className="my-2 font-bold" onClick={() => setUnfolded(false)} to={"/profile"}>
               Profile
-            </Link>
+            </Link> */}
             <Link className="my-2 font-bold" onClick={(e) => handleLogout(e, true)}>Log Out</Link>
           </>
         ) : (

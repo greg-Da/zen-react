@@ -21,7 +21,7 @@ export default function AppointmentNew() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/available_appointment`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/available_appointment`, {
       method: "GET",
       headers: {
         Authorization: Cookies.get("token"),
@@ -52,7 +52,7 @@ export default function AppointmentNew() {
     console.log(date);
 
     fetch(
-      `http://localhost:3000/users/${currentUser.id}/appointments/${data.id}`,
+      `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${data.id}`,
       {
         method: "PATCH",
         headers: {

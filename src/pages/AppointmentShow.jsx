@@ -13,7 +13,7 @@ export default function AppointmentShow() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
       headers: {
         Authorization: Cookies.get("token"),
       },
@@ -26,7 +26,7 @@ export default function AppointmentShow() {
   }, [currentUser, id]);
 
   function handleCancel() {
-    fetch(`http://localhost:3000/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

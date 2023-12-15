@@ -18,7 +18,7 @@ export default function AddUpdates() {
     data.append("update[content]", content);
     data.append("update[image]", image);
 
-    fetch("http://localhost:3000/updates", {
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/updates", {
       method: "POST",
       headers: {
         Authorization: Cookies.get("token"),

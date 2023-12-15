@@ -16,7 +16,7 @@ export default function UpdateUpdates() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/updates/${id}`)
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -40,7 +40,7 @@ export default function UpdateUpdates() {
       data.append("update[image]", image);
     }
 
-    fetch(`http://localhost:3000/updates/${id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: Cookies.get("token"),
@@ -69,7 +69,7 @@ export default function UpdateUpdates() {
   }
 
   function handleDelete() {
-    fetch(`http://localhost:3000/updates/${id}`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

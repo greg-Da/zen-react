@@ -13,7 +13,7 @@ export default function Store() {
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    fetch("http://localhost:3000/items")
+    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/items")
       .then((res) => res.json())
       .then((data) => {
         setData(data.data);
@@ -22,7 +22,7 @@ export default function Store() {
 
   useEffect(() => {
     if (currentUser.id) {
-      fetch(`http://localhost:3000/cart`, {
+      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart`, {
         headers: {
           Authorization: Cookies.get("token"),
         },
@@ -44,7 +44,7 @@ export default function Store() {
       setCart(updatedCart);
 
       fetch(
-        `http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`,
+        `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`,
         {
           method: "PATCH",
           headers: {
@@ -67,7 +67,7 @@ export default function Store() {
         })
         .catch((err) => console.error(err));
     } else {
-      fetch(`http://localhost:3000/items/${item.id}/cart_items`, {
+      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${item.id}/cart_items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

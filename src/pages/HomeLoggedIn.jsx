@@ -13,7 +13,7 @@ export default function HomeLoggedIn() {
   useEffect(() => {
     {
       currentUser.id &&
-        fetch(`http://localhost:3000/users/${currentUser.id}/invoices`, {
+        fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/invoices`, {
           headers: {
             Authorization: Cookies.get("token"),
           },
@@ -36,7 +36,7 @@ export default function HomeLoggedIn() {
   useEffect(() => {
     {
       currentUser.id &&
-        fetch(`http://localhost:3000/confirmed_appointments`, {
+        fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/confirmed_appointments`, {
           headers: {
             Authorization: Cookies.get("token"),
           },
@@ -56,21 +56,21 @@ export default function HomeLoggedIn() {
     }
   }, [currentUser]);
 
-  function downloadInvoice(id){
-    fetch(`http://localhost:3000/invoices/${id}/download_pdf`, {
+  function downloadInvoice(id) {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/invoices/${id}/download_pdf`, {
       headers: {
         Authorization: Cookies.get("token"),
-      }
+      },
     })
-    .then(res => res.blob())
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'invoice.pdf';
-      link.click();
-      URL.revokeObjectURL(url);
-    })
+      .then((res) => res.json())
+      .then((data) => {
+        const link = document.createElement('a');
+        link.href = data.data;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.download = 'invoice.pdf';
+        link.click();
+      });
   }
 
   return (
@@ -148,9 +148,10 @@ export default function HomeLoggedIn() {
               <p>Amount: {invoice.total}$</p>
               <p>x{invoice.appointment_number}</p>
             </div>
-            {invoice.status === "paid" && (
-              <i onClick={() => downloadInvoice(invoice.id)} className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"></i>
-            )}
+            <i
+              onClick={() => downloadInvoice(invoice.id)}
+              className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"
+            ></i>
             {invoice.status === "unpaid" && (
               <Link to={`/checkout/invoices/${invoice.id}`}>
                 <i className="fa-regular fa-credit-card text-blue-500 text-2xl ml-2 cursor-pointer"></i>

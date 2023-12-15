@@ -11,7 +11,7 @@ export default function OrderNew() {
 
   function handleSubmit() {
 
-    fetch(`http://localhost:3000/users/${currentUser.id}/orders`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

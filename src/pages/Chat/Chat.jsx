@@ -2,52 +2,152 @@ import { useRef } from "react";
 import "./Chat.css";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useContext } from "react";
+import { AlertContext } from "../../components/Alert";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [user, setUser] = useState({
-    id: 1,
-    first_name: "Jay",
-    last_name: "Gordosova",
-  });
+  const [admins, setAdmins] = useState([]);
+  const [contact, setContact] = useState({});
+
   const ref = useRef(null);
+  const { setAlert } = useContext(AlertContext);
+  const currentUser = useSelector((state) => state.auth.user)
 
-  const currentUser = useSelector((state) => state.auth.user);
+  let { id } = useParams();
 
-    useEffect(() => {
-      fetch(`http://localhost:3000/users/${currentUser.id}/private_messages`, {
-        method: "GET",
+  useEffect(() => {
+    console.log(messages);
+  }, [messages])
+
+  useEffect(() => {
+    if (id === undefined) {
+      fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/index_admins", {
+        headers: {
+          Authorization: Cookies.get("token"),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setAdmins(data.data);
+        });
+    } else {
+      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${id}`, {
         headers: {
           Authorization: Cookies.get("token"),
         }
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data)
-          // setUser(data.user);
-          // setMessages(data.messages);
+          console.log(data);
+          setContact(data.data);
         });
-    }, [currentUser]);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const userId =
+      id === undefined ? (admins.length === 1 ? admins[0].id : contact.id) : id;
+
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`, {
+      method: "GET",
+      headers: {
+        Authorization: Cookies.get("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setMessages(data.data);
+      });
+  }, [admins, contact, id]);
 
   function handleChange(e) {
     ref.current.style.height = ref.current.scrollHeight + "px";
     setNewMessage(e.target.value);
   }
 
+  function sendMessage(retry = false) {
+    const userId =
+      id === undefined ? (admins.length === 1 ? admins[0].id : contact.id) : id;
+
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: Cookies.get("token"),
+      },
+      body: JSON.stringify({
+        content: newMessage,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        if (data.status.code === 201) {
+          setMessages([...messages, data.data]);
+          setNewMessage("");
+        } else {
+          if (retry) {
+            throw new Error("Something went wrong");
+          }
+          setTimeout(() => {
+            sendMessage(true);
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        setAlert({ text: err.message, type: "error" });
+      });
+  }
+
   return (
     <div className="backgroundLeaves w-full bg-beige overflow-hidden">
       <div className="flex py-2 bg-beige border-b-2 border-black drop-shadow-lg justify-center">
-        <h1 className="font-bold text-3xl">
-          {user.first_name} {user.last_name}
-        </h1>
+        {id === undefined ? (
+          admins.length === 1 ? (
+            <h1 className="text-2xl font-bold bg-transparent">
+              {admins[0].first_name} {admins[0].last_name}
+            </h1>
+          ) : (
+            <div className="relative">
+              <select
+                onChange={(e) => setContact(e.target.value)}
+                value={contact}
+                className="adminSelect pr-6 text-2xl font-bold bg-transparent"
+              >
+                <option className="hidden" value="">
+                  Choose contact
+                </option>
+
+                {admins.map((admin) => (
+                  <option key={admin.id} value={admin.id}>
+                    {admin.first_name} {admin.last_name}
+                  </option>
+                ))}
+              </select>
+              <i className="fa-solid fa-chevron-down -ml-6 absolute z-[-1] top-1 text-2xl"></i>
+            </div>
+          )
+        ) : (
+          <h1 className="text-2xl font-bold bg-transparent">{contact.first_name} {contact.last_name}</h1>
+        )}
       </div>
 
       <div className="h-[93%]">
-        <div className="p-4 h-[inherit] overflow-y-scroll">
+        <div className="p-4 h-[inherit] overflow-y-scroll flex flex-col">
+          {messages &&
+            messages.map((message) => (
+              <div key={message.id} className={`${message.sender_id === currentUser.id ? "self-end bg-[#80ff80]" : "bg-blue-300"} p-3  rounded-lg w-fit my-2`}>
+                <p>{message.content}</p>
+              </div>
+            ))}
         </div>
 
         <div className="flex items-center bg-white border-2 border-black rounded-3xl mx-2 py-1 px-2">
@@ -58,7 +158,10 @@ export default function Chat() {
             placeholder="Type your message"
             type="text"
           ></textarea>
-          <i className="fa-solid fa-circle-right text-3xl cursor-pointer text-green"></i>
+          <i
+            onClick={() => sendMessage()}
+            className="fa-solid fa-circle-right text-3xl cursor-pointer text-green"
+          ></i>
         </div>
       </div>
     </div>

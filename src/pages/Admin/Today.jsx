@@ -10,7 +10,7 @@ export default function Today() {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/users/${
+      `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${
         currentUser.id
       }/appointments/by_date/${new Date().toISOString().slice(0, 10)}`,
       {

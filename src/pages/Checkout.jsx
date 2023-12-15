@@ -18,7 +18,7 @@ const CheckoutForm = () => {
 
   useEffect(() => {
 
-    fetch(`http://localhost:3000/${type}/${id}/create_checkout_session`, {
+    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/${type}/${id}/create_checkout_session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -34,6 +34,7 @@ import AppointmentRequest from "./pages/Admin/AppointmentRequest";
 import { CheckoutForm } from "./pages/Checkout";
 import { CheckoutReturn } from "./pages/CheckoutReturn";
 import OrderNew from "./pages/OrderNew";
+import Contacts from "./pages/Admin/Contacts";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -42,7 +43,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (!currentUser.id && token !== undefined) {
-      fetch("http://localhost:3000/current_user", {
+      fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/current_user", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -168,6 +169,25 @@ function App() {
                 </AdminRoute>
               }
             />
+
+            <Route
+              path="/admin/contacts"
+              element={
+                <AdminRoute>
+                  <Contacts />
+                </AdminRoute>
+              }
+            />
+
+            <Route
+              path="/admin/chat/:id"
+              element={
+                <AdminRoute>
+                  <Chat />
+                </AdminRoute>
+              }
+            />
+
             <Route
               path="/admin/addItems"
               element={
