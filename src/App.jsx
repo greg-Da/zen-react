@@ -19,13 +19,13 @@ import Store from "./pages/Store/Store";
 import Chat from "./pages/Chat/Chat";
 import Today from "./pages/Admin/Today";
 import Calendar from "./pages/Admin/Calendar/Calendar";
-import AddArticles from "./pages/Admin/AddArticles";
+import AddItems from "./pages/Admin/AddItems";
 import Invoice from "./pages/Admin/Invoice";
 import Product from "./pages/Product";
 import AppointmentNew from "./pages/AppointmentNew";
 import AdminRoute from "./components/AdminRoute";
 import AddUpdates from "./pages/Admin/AddUpdates";
-import UpdateArticles from "./pages/Admin/UpdateArticles";
+import UpdateItems from "./pages/Admin/UpdateItems";
 import UpdateUpdates from "./pages/Admin/UpdateUpdates";
 import Updates from "./pages/Admin/Updates";
 import AppointmentShow from "./pages/AppointmentShow";
@@ -169,18 +169,18 @@ function App() {
               }
             />
             <Route
-              path="/admin/addArticles"
+              path="/admin/addItems"
               element={
                 <AdminRoute>
-                  <AddArticles />
+                  <AddItems />
                 </AdminRoute>
               }
             />
             <Route
-              path="/admin/updateArticles/:id"
+              path="/admin/updateItems/:id"
               element={
                 <AdminRoute>
-                  <UpdateArticles />
+                  <UpdateItems />
                 </AdminRoute>
               }
             />

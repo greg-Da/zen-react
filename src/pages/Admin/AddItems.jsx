@@ -1,76 +1,51 @@
 import { useState } from "react";
 import FileInput from "../../components/FileInput";
 import Cookies from "js-cookie";
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AlertContext } from "../../components/Alert";
 
-export default function UpdateArticles() {
+export default function AddItems() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [description, setDescription] = useState("");
   const [imagesDisplay, setImagesDisplay] = useState([]);
   const [images, setImages] = useState([]);
-  const { id } = useParams();
 
-  let navigate = useNavigate();
+  const { setAlert } = useContext(AlertContext);
 
-  useEffect(() => {
-    fetch(`http://localhost:3000/items/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setTitle(data.data.title);
-        setPrice(data.data.price);
-        setStock(data.data.stock);
-        setDescription(data.data.description);
-        setImages(data.data.images);
-        setImagesDisplay(data.data.images);
-      });
-  }, [id]);
+  let navigate = useNavigate()
 
   function handleSubmit() {
-    const data = new FormData();
-    data.append("item[title]", title);
-    data.append("item[description]", description);
-    data.append("item[price]", price);
-    data.append("item[stock]", stock);
+    const formData = new FormData();
     images.forEach((image) => {
-      data.append(`item[images][]`, image);
+      formData.append(`item[images][]`, image);
     });
+    formData.append("item[title]", title);
+    formData.append("item[price]", price);
+    formData.append("item[stock]", stock);
+    formData.append("item[description]", description);
 
-    fetch(`http://localhost:3000/items/${id}`, {
-      method: "PATCH",
+    fetch("http://localhost:3000/items", {
+      method: "POST",
       headers: {
         Authorization: Cookies.get("token"),
       },
-      body: data
+      body: formData,
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log(data)
+        if(data.status.code === 201){
+          navigate("/admin/addArticles")
+        }else{
+          throw new Error(data.status.message)
+        }
       })
       .catch((err) => {
         console.error(err);
-      });
-  }
-
-  function handleDelete() {
-    fetch(`http://localhost:3000/items/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: Cookies.get("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        navigate("/store");
-      })
-      .catch((err) => {
-        console.error(err);
+        setAlert({ text: err.message, type: "error" });
       });
   }
 
@@ -82,14 +57,9 @@ export default function UpdateArticles() {
     setImages((prev) => [...prev, e.target.files[0]]);
   }
 
-  function removeImage(index) {
-    setImagesDisplay((prev) => prev.filter((_, i) => i !== index));
-    setImages((prev) => prev.filter((_, i) => i !== index));
-  }
-
   return (
     <div className="py-4 px-4 lg:px-64 w-full">
-      <h1 className="text-3xl font-bold">Update {title}</h1>
+      <h1 className="text-3xl font-bold">Add Articles</h1>
       <div className="flex justify-center mt-5">
         <div
           className={`my-5 ${
@@ -99,12 +69,7 @@ export default function UpdateArticles() {
           }`}
         >
           {imagesDisplay.map((image, index) => (
-            <div key={index} className="relative">
-              <div onClick={() => removeImage(index)} className="cursor-pointer bg-red-500 absolute top-1 right-1 rounded-full w-6 h-6 flex justify-center items-center">
-                <i className="fa-solid fa-xmark"></i>
-              </div>
-              <img className="w-auto h-auto" src={image} />
-            </div>
+            <img className="w-auto h-auto " key={index} src={image} />
           ))}
           {images.length < 5 ? <FileInput uploadFile={handleFileUpload} /> : ""}
         </div>
@@ -149,13 +114,6 @@ export default function UpdateArticles() {
             Submit
           </button>
         </div>
-
-        <button
-          onClick={() => handleDelete()}
-          className="bg-red-500 text-white rounded-full py-2 px-5 text-2xl font-bold"
-        >
-          Delete
-        </button>
       </div>
     </div>
   );
