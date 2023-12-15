@@ -41,12 +41,13 @@ export default function AppointmentRequest() {
         Authorization: Cookies.get("token"),
       },
       body: JSON.stringify({
-        accept: accept ? 'confirmed' : 'cancelled',
+        status: accept ? 'confirmed' : 'cancelled',
       })
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        setAppointments(appointments.filter((item) => item.id !== id));
       })
       .catch((err) => {
         setAlert({ text: err.message, type: "error" });
@@ -61,7 +62,7 @@ export default function AppointmentRequest() {
         {appointments.map((item) => (
           <div key={item.id} className="p-3 border-2 border-black rounded-lg">
             <div className="font-bold text-xl flex justify-between">
-              <p>{item.datetime}</p>
+              <p>{[...item.datetime.split('T').shift().split('.').pop().split('-').slice(1), ...item.datetime.split('T').shift().split('.').pop().split('-').slice(0, 1)].join('/')}</p>
 
               <p>
                 {item.datetime.split("T").pop().split(".").shift().slice(0, -3)}
