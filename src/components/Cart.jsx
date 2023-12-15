@@ -3,68 +3,64 @@ import { Link } from "react-router-dom";
 import checkAuth from "../utils/checkAuth";
 import Cookies from "js-cookie";
 
-export default function Cart({openModal, setOpenModal, cart, setCart}){
+export default function Cart({ openModal, setOpenModal, cart, setCart }) {
+  
+  function removeFromCart(id) {
+    const index = cart.findIndex((i) => i.item_id === id);
 
-    
-      function removeFromCart(id) {
-        const index = cart.findIndex((i) => i.item_id === id);
-    
-    
-        fetch(`http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: Cookies.get("token"),
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            if (data.status.code === 200) {
-              console.log("Item removed from cart successfully");
-            } else {
-              console.log("Error removing item from cart");
-            }
-          });
-    
-        setCart((prev) => prev.filter((item) => item.item_id !== id));
-    
-      }
-    
-    
-      function updateItemQuantity(value, id) {
-        const updatedCart = [...cart];
-        updatedCart[id].quantity = value;
-        setCart(updatedCart);
-      }
-    
-      function updateCartItem(value, id) {
-        console.log(value);
-        const index = cart.findIndex((i) => i.item_id === id);
-        fetch(`http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: Cookies.get("token"),
-          },
-          body: JSON.stringify({
-            quantity: value,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            if (data.status.code === 200) {
-              console.log("Item quantity updated successfully");
-            } else {
-              console.log("Error updating item quantity");
-            }
-          })
-          .catch((err) => console.error(err));
-      }
-    return(
-        <>
-        {checkAuth() ? (
+    fetch(`http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: Cookies.get("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status.code === 200) {
+          console.log("Item removed from cart successfully");
+        } else {
+          console.log("Error removing item from cart");
+        }
+      });
+
+    setCart((prev) => prev.filter((item) => item.item_id !== id));
+  }
+
+  function updateItemQuantity(value, id) {
+    const updatedCart = [...cart];
+    updatedCart[id].quantity = value;
+    setCart(updatedCart);
+  }
+
+  function updateCartItem(value, id) {
+    console.log(value);
+    const index = cart.findIndex((i) => i.item_id === id);
+    fetch(`http://localhost:3000/cart/cart_items/${cart[index].cart_item_id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: Cookies.get("token"),
+      },
+      body: JSON.stringify({
+        quantity: value,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status.code === 200) {
+          console.log("Item quantity updated successfully");
+        } else {
+          console.log("Error updating item quantity");
+        }
+      })
+      .catch((err) => console.error(err));
+  }
+  return (
+    <>
+      {checkAuth() ? (
         <div className="flex justify-end">
           <div
             onClick={() => {
@@ -115,7 +111,7 @@ export default function Cart({openModal, setOpenModal, cart, setCart}){
             ))}
             <div className="flex justify-end mt-2">
               {checkAuth() ? (
-                <Link to={"/checkout"}>
+                <Link to={"/order/new"}>
                   <button className="bg-green text-xl text-white py-1 px-2 rounded-lg">
                     Order
                   </button>
@@ -131,6 +127,6 @@ export default function Cart({openModal, setOpenModal, cart, setCart}){
           </div>
         )}
       </Modal>
-      </>
-    )
+    </>
+  );
 }

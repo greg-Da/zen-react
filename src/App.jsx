@@ -31,6 +31,9 @@ import Updates from "./pages/Admin/Updates";
 import AppointmentShow from "./pages/AppointmentShow";
 import AppointmentUpdate from "./pages/AppointmentUpdate";
 import AppointmentRequest from "./pages/Admin/AppointmentRequest";
+import { CheckoutForm } from "./pages/Checkout";
+import { CheckoutReturn } from "./pages/CheckoutReturn";
+import OrderNew from "./pages/OrderNew";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -107,19 +110,47 @@ function App() {
               }
             />
 
-            {/* <Route
-              path="/chat/:id"
+            <Route path="/store" element={<Store />} />
+            <Route path="/product/:id" element={<Product />} />
+
+            <Route
+              path="/order/new"
+              element={
+                <PrivateRoute>
+                  <OrderNew />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/checkout/:type/:id"
+              element={
+                <PrivateRoute>
+                  <CheckoutForm />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/checkout/:type/:id/return"
+              element={
+                <PrivateRoute>
+                  <CheckoutReturn />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/chat"
               element={
                 <PrivateRoute>
                   <Chat />
                 </PrivateRoute>
               }
-            /> */}
+            />
+
             <Route path="/chat" element={<Chat />} />
             <Route path="appointment/new" element={<AppointmentNew />} />
-
-            <Route path="/store" element={<Store />} />
-            <Route path="/product/:id" element={<Product />} />
 
             <Route
               path="/admin/today"

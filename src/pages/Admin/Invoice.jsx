@@ -1,6 +1,8 @@
 import Cookies from "js-cookie";
+import { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { AlertContext } from "../../components/Alert";
 
 export default function Invoice() {
   const [search, setSearch] = useState("");
@@ -10,19 +12,21 @@ export default function Invoice() {
   const [price, setPrice] = useState("");
   const [nmbSession, setNmbSession] = useState("");
 
-    useEffect(() => {
-      fetch("http://localhost:3000/users",{
-        headers: {
-          Authorization: Cookies.get("token")
-        }
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data)
-          setUsers(data);
-          setFilteredUsers(data);
-        });
-    }, []);
+  const { setAlert } = useContext(AlertContext);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/users", {
+      headers: {
+        Authorization: Cookies.get("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setUsers(data.data);
+        setFilteredUsers(data.data);
+      });
+  }, []);
 
   useEffect(() => {
     if (search === "") {
@@ -39,9 +43,11 @@ export default function Invoice() {
   }, [search]);
 
   function changeSelectedUser(id) {
-    setSelectedUser(id);
-    setPrice("");
-    setNmbSession("");
+    if (selectedUser !== id) {
+      setSelectedUser(id);
+      setPrice("");
+      setNmbSession("");
+    }
   }
 
   function handleSubmit(id) {
@@ -52,17 +58,24 @@ export default function Invoice() {
         Authorization: Cookies.get("token"),
       },
       body: JSON.stringify({
-        user_id: id,
-        price: parseInt(price),
-        nmb_session: parseInt(nmbSession),
+        invoice: {
+          total: parseFloat(price),
+          appointment_number: parseInt(nmbSession),
+          status: "unpaid",
+        },
       }),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        setAlert({ text: 'Invoice Sent', type: "success" })
+        setSelectedUser(0)
+        setNmbSession('')
+        setPrice('')
       })
       .catch((err) => {
         console.log(err);
+        setAlert({ text: err.message, type: "error" })
       });
   }
 

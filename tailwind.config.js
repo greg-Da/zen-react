@@ -9,6 +9,9 @@ export default {
       colors: {
         'green': '#009B63',
         'beige': '#F0E1D5'
+      },
+      animation: {
+        'spin-slow': 'spin 1.8s linear infinite',
       }
     },
   },
