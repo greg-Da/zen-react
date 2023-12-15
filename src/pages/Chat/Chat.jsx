@@ -3,6 +3,8 @@ import "./Chat.css";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -14,16 +16,22 @@ export default function Chat() {
   });
   const ref = useRef(null);
 
-  // const user = useParams()
+  const currentUser = useSelector((state) => state.auth.user);
 
-  //   useEffect(() => {
-  //     fetch("")
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         setUser(data.user);
-  //         setMessages(data.messages);
-  //       });
-  //   }, []);
+    useEffect(() => {
+      fetch(`http://localhost:3000/users/${currentUser.id}/private_messages`, {
+        method: "GET",
+        headers: {
+          Authorization: Cookies.get("token"),
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data)
+          // setUser(data.user);
+          // setMessages(data.messages);
+        });
+    }, [currentUser]);
 
   function handleChange(e) {
     ref.current.style.height = ref.current.scrollHeight + "px";

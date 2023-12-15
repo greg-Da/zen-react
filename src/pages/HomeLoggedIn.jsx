@@ -8,34 +8,70 @@ import Cookies from "js-cookie";
 export default function HomeLoggedIn() {
   const currentUser = useSelector((state) => state.auth.user);
   const [invoices, setInvoices] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/users/${currentUser.id}/invoices`, {
-      headers: {
-        Authorization: Cookies.get("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if(data.status.code === 200){
-          setInvoices(data.data);
-        }else{
-          throw new Error(data.status.message)
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      })
+    {
+      currentUser.id &&
+        fetch(`http://localhost:3000/users/${currentUser.id}/invoices`, {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            if (data.status.code === 200) {
+              setInvoices(data.data.reverse());
+            } else {
+              throw new Error(data.status.message);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+    }
   }, [currentUser]);
 
-  const data = {
-    upLeft: "01/01/2024",
-    upRight: "3 PM",
-    down: "Life coaching",
-    id: 1,
-  };
+  useEffect(() => {
+    {
+      currentUser.id &&
+        fetch(`http://localhost:3000/confirmed_appointments`, {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            if (data.status.code === 200) {
+              setAppointments(data.data);
+            } else {
+              throw new Error(data.status.message);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+    }
+  }, [currentUser]);
 
+  function downloadInvoice(id){
+    fetch(`http://localhost:3000/invoices/${id}/download_pdf`, {
+      headers: {
+        Authorization: Cookies.get("token"),
+      }
+    })
+    .then(res => res.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'invoice.pdf';
+      link.click();
+      URL.revokeObjectURL(url);
+    })
+  }
 
   return (
     <div className="w-full py-4 px-4 lg:px-64">
@@ -50,7 +86,7 @@ export default function HomeLoggedIn() {
       </Link>
 
       <Link
-        to={"/chat/1"}
+        to={"/chat"}
         className="mt-5 flex justify-between items-center w-full rounded-lg bg-gray-300 p-3"
       >
         <p className="font-bold">Get in touch</p>
@@ -60,7 +96,37 @@ export default function HomeLoggedIn() {
       <div className="mt-5">
         <h2 className="text-2xl">Your next appointments</h2>
         <div>
-          <CardMeeting data={data} />
+          {appointments.map((appointment) => (
+            <CardMeeting
+              key={appointment.id}
+              data={{
+                upLeft: [
+                  ...appointment.datetime
+                    .split("T")
+                    .shift()
+                    .split(".")
+                    .pop()
+                    .split("-")
+                    .slice(1),
+                  ...appointment.datetime
+                    .split("T")
+                    .shift()
+                    .split(".")
+                    .pop()
+                    .split("-")
+                    .slice(0, 1),
+                ].join("/"),
+                upRight: appointment.datetime
+                  .split("T")
+                  .pop()
+                  .split(".")
+                  .shift()
+                  .slice(0, -3),
+                type: appointment.appointment_type,
+                id: appointment.id,
+              }}
+            />
+          ))}
         </div>
       </div>
 
@@ -74,14 +140,22 @@ export default function HomeLoggedIn() {
             {invoice.status === "paid" ? (
               <p className="w-1/3 font-bold text-green">PAID</p>
             ) : (
-              <p className="w-1/3 font-bold text-red-500">{invoice.status.toUpperCase()}</p>
+              <p className="w-1/3 font-bold text-red-500">
+                {invoice.status.toUpperCase()}
+              </p>
             )}
             <div className="flex w-full items-center justify-around">
               <p>Amount: {invoice.total}$</p>
               <p>x{invoice.appointment_number}</p>
             </div>
-            <i className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"></i>
-
+            {invoice.status === "paid" && (
+              <i onClick={() => downloadInvoice(invoice.id)} className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"></i>
+            )}
+            {invoice.status === "unpaid" && (
+              <Link to={`/checkout/invoices/${invoice.id}`}>
+                <i className="fa-regular fa-credit-card text-blue-500 text-2xl ml-2 cursor-pointer"></i>
+              </Link>
+            )}
           </div>
         ))}
       </div>
