@@ -13,8 +13,8 @@ export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("!1Qwerty");
-  const [password_confirmation, setPassword_confirmation] = useState("!1Qwerty");
+  const [password, setPassword] = useState("");
+  const [password_confirmation, setPassword_confirmation] = useState("");
   const { setAlert } = useContext(AlertContext);
 
   let dispatch = useDispatch();
@@ -42,7 +42,7 @@ export default function Register() {
       .then((res) => {
         if (res.ok) {
           Cookies.set("token", res.headers.get("Authorization"), {
-            expires: 2,
+            expires: 1,
             sameSite: "strict",
           });
         } 

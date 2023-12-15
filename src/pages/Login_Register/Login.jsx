@@ -10,8 +10,8 @@ import { logIn } from "../../state/auth/authSlice";
 import "./style.css";
 
 export default function Login() {
-  const [email, setEmail] = useState("admin@test.com");
-  const [password, setPassword] = useState("!1Qwerty");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { setAlert } = useContext(AlertContext);
 
   let dispatch = useDispatch();
@@ -34,7 +34,7 @@ export default function Login() {
       .then((res) => {
         if (res.ok) {
           Cookies.set("token", res.headers.get("Authorization"), {
-            expires: 2,
+            expires: 1,
             sameSite: "strict",
           });
         }
