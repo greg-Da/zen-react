@@ -12,6 +12,8 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV="production"
 
+COPY package*.json /app/
+
 # Install pnpm
 ARG PNPM_VERSION=8.10.0
 RUN npm install -g pnpm@$PNPM_VERSION
@@ -29,7 +31,7 @@ COPY --link package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
-COPY --link . .
+COPY . /app/
 
 # Build application
 RUN pnpm run build
@@ -43,6 +45,8 @@ FROM nginx
 
 # Copy built application
 COPY --from=build /app/dist /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx/nginx.conf /etc/nginx/conf.d
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 80
