@@ -14,16 +14,17 @@ export default function Home() {
   const [updateInfo, setUpdateInfo] = useState({});
 
   useEffect(() => {
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/updates")
+    fetch(
+      "https://zen-counseling-production-4a7de6447247.herokuapp.com/updates"
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
 
-        if(data.status.code === 200){
+        if (data.status.code === 200) {
           setUpdates(data.data);
-        
-        }else{
-          throw new Error(data.status.message)
+        } else {
+          throw new Error(data.status.message);
         }
       })
       .catch((err) => console.error(err));
@@ -84,7 +85,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mt-5 lg:mt-14 overflow-x-scroll">
+      <div className="mt-5 lg:mt-14 overflow-y-hidden overflow-x-scroll">
         <h2 className="font-bold text-xl md:text-3xl cursor-pointer">
           Updates
         </h2>
@@ -93,8 +94,15 @@ export default function Home() {
             <div
               onClick={() => setModale(update)}
               key={update.id}
-              className="cursor-pointer h-32 md:h-64 w-32 md:w-64 mr-2"
+              className="cursor-pointer h-64 w-32 md:h-80 md:w-80 mr-2"
             >
+              <div className="flex justify-center">
+                <img
+                  src={update.image}
+                  className="h-32 object-cover md:h-48 md:w-48"
+                  alt={update.title}
+                />
+              </div>
               <p className="font-bold text-xl text-center">{update.title}</p>
               <p className="clamp-4">{update.content}</p>
             </div>
@@ -283,6 +291,7 @@ export default function Home() {
       </div>
 
       <Modal open={openModal} closeModal={setOpenModal}>
+        <img className="w-full h-[40rem] object-cover" src={updateInfo.image} alt={updateInfo.title} />
         <p className="font-bold text-2xl text-center mb-5">
           {updateInfo.title}
         </p>

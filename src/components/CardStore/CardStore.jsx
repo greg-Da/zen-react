@@ -12,9 +12,11 @@ export default function CardStore({
 
   return (
     <div className="border-2 border-black rounded-lg">
-      <Link to={`/product/${id}`}>
-        <img src={image} alt={`Picture of ${title}`} />
-      </Link>
+      <div className="flex justify-center">
+        <Link className="w-full" to={`/product/${id}`}>
+          <img className="w-full h-64 object-cover" src={image} alt={`Picture of ${title}`} />
+        </Link>
+      </div>
 
       <div className="p-2">
         <div className="flex justify-between mt-2">

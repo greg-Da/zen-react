@@ -6,9 +6,10 @@ import {
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
 import { useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const stripePromise = loadStripe(
-  "pk_test_QZRZ9dVzzgcQLtF3ZHXA8ncR"
+  "pk_test_51NkTOXHGPrfYJoPuOg0oKfft9u1JLEHY3WxZc6Mcg0aZ1K3dApKIgBmoHtR9nktKPn8in1KFLacTWKuZ4RbIxUOT00cpGDi9mt"
 );
 
 const CheckoutForm = () => {
@@ -22,6 +23,7 @@ const CheckoutForm = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: Cookies.get('token')
       },
       body: JSON.stringify({
         return_url: `/checkout/${type}/${id}/return`,

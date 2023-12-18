@@ -50,6 +50,7 @@ export default function UpdateItems() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        navigate(`/product/${id}`)
       })
       .catch((err) => {
         console.error(err);

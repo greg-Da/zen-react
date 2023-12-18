@@ -112,7 +112,7 @@ export default function Product() {
       
       {currentUser.admin && (
         <div className="flex justify-end my-5">
-          <Link to={`/admin/updateArticles/${id}`}>
+          <Link to={`/admin/updateItems/${id}`}>
             <button className="bg-orange-500 rounded-full py-1 px-3 text-white text-2xl font-bold">
               Update
             </button>
@@ -121,7 +121,7 @@ export default function Product() {
       )}
       <div className="flex justify-center">
         <img
-          className="w-96 h-96"
+          className="w-[32rem] h-[32rem] object-cover"
           src={selectedImage}
           alt={`Picture ${item.title}`}
         />
@@ -133,7 +133,7 @@ export default function Product() {
             onClick={() => setSelectedImage(image)}
             key={id}
             src={image}
-            className=""
+            className="h-32 w-32 object-cover"
           />
         ))}
       </div>

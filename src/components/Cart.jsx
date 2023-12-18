@@ -3,18 +3,26 @@ import { Link } from "react-router-dom";
 import checkAuth from "../utils/checkAuth";
 import Cookies from "js-cookie";
 
-export default function Cart({ openModal, setOpenModal, cart, setCart }) {
-  
+export default function Cart({
+  openModal,
+  setOpenModal,
+  cart,
+  setCart,
+  totalPrice,
+}) {
   function removeFromCart(id) {
     const index = cart.findIndex((i) => i.item_id === id);
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: Cookies.get("token"),
-      },
-    })
+    fetch(
+      `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: Cookies.get("token"),
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -35,18 +43,25 @@ export default function Cart({ openModal, setOpenModal, cart, setCart }) {
   }
 
   function updateCartItem(value, id) {
-    console.log(value);
     const index = cart.findIndex((i) => i.item_id === id);
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: Cookies.get("token"),
-      },
-      body: JSON.stringify({
-        quantity: value,
-      }),
-    })
+    if (value < 1) {
+      updateItemQuantity(1, index);
+      value = 1;
+    }
+
+    fetch(
+      `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: Cookies.get("token"),
+        },
+        body: JSON.stringify({
+          quantity: value,
+        }),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -83,7 +98,7 @@ export default function Cart({ openModal, setOpenModal, cart, setCart }) {
             {cart.map((item, id) => (
               <div
                 key={id}
-                className="pb-2 flex items-center justify-between border-b-2 border-black"
+                className="flex items-center justify-between border-b-2 border-black"
               >
                 <img
                   className="w-16 h-16 object-cover"
@@ -92,15 +107,23 @@ export default function Cart({ openModal, setOpenModal, cart, setCart }) {
                 />
                 <div className="mx-2 w-full flex justify-between">
                   <p className="text-2xl font-bold">{item.name}</p>
-                  <p className="text-2xl font-bold">{item.total_price}$</p>
-                  <input
-                    className="w-12 border rounded-sm"
-                    type="number"
-                    min={"1"}
-                    onBlur={(e) => updateCartItem(e.target.value, item.item_id)}
-                    onChange={(e) => updateItemQuantity(e.target.value, id)}
-                    value={item.quantity}
-                  />
+                  <div className="flex">
+                    <p className="text-2xl font-bold">{item.price}$</p>
+                    <input
+                      className="w-12 border h-fit rounded-sm"
+                      type="number"
+                      onInput={(e) =>
+                        (e.target.value = e.target.value
+                          .replace(/[^0-9.]/g, "")
+                          .replace(/(\..*)\./g, "$1"))
+                      }
+                      onBlur={(e) =>
+                        updateCartItem(e.target.value, item.item_id)
+                      }
+                      onChange={(e) => updateItemQuantity(e.target.value, id)}
+                      value={item.quantity}
+                    />
+                  </div>
                 </div>
 
                 <i
@@ -109,7 +132,8 @@ export default function Cart({ openModal, setOpenModal, cart, setCart }) {
                 ></i>
               </div>
             ))}
-            <div className="flex justify-end mt-2">
+            <div className="flex justify-between mt-2">
+              <p className="font-bold">{totalPrice}$</p>
               {checkAuth() ? (
                 <Link to={"/order/new"}>
                   <button className="bg-green text-xl text-white py-1 px-2 rounded-lg">

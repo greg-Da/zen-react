@@ -12,36 +12,42 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [admins, setAdmins] = useState([]);
-  const [contact, setContact] = useState({});
+  const [contact, setContact] = useState(0);
 
   const ref = useRef(null);
   const { setAlert } = useContext(AlertContext);
-  const currentUser = useSelector((state) => state.auth.user)
+  const currentUser = useSelector((state) => state.auth.user);
 
   let { id } = useParams();
 
   useEffect(() => {
     console.log(messages);
-  }, [messages])
+  }, [messages]);
 
   useEffect(() => {
     if (id === undefined) {
-      fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/index_admins", {
-        headers: {
-          Authorization: Cookies.get("token"),
-        },
-      })
+      fetch(
+        "https://zen-counseling-production-4a7de6447247.herokuapp.com/index_admins",
+        {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
           setAdmins(data.data);
         });
     } else {
-      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${id}`, {
-        headers: {
-          Authorization: Cookies.get("token"),
+      fetch(
+        `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${id}`,
+        {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
         }
-      })
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -51,20 +57,30 @@ export default function Chat() {
   }, [id]);
 
   useEffect(() => {
-    const userId =
-      id === undefined ? (admins.length === 1 ? admins[0].id : contact.id) : id;
+    let userId;
+    if (id === undefined) {
+      userId = admins.length === 1 ? admins[0].id : contact;
+    } else {
+      userId = id;
+    }
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`, {
-      method: "GET",
-      headers: {
-        Authorization: Cookies.get("token"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setMessages(data.data);
-      });
+    {
+      userId > 0 &&
+        fetch(
+          `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: Cookies.get("token"),
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            setMessages(data.data);
+          });
+    }
   }, [admins, contact, id]);
 
   function handleChange(e) {
@@ -73,38 +89,48 @@ export default function Chat() {
   }
 
   function sendMessage(retry = false) {
-    const userId =
-      id === undefined ? (admins.length === 1 ? admins[0].id : contact.id) : id;
+    let userId;
+    if (id === undefined) {
+      userId = admins.length === 1 ? admins[0].id : contact;
+    } else {
+      userId = id;
+    }
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: Cookies.get("token"),
-      },
-      body: JSON.stringify({
-        content: newMessage,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-
-        if (data.status.code === 201) {
-          setMessages([...messages, data.data]);
-          setNewMessage("");
-        } else {
-          if (retry) {
-            throw new Error("Something went wrong");
+    {
+      userId > 0 &&
+        fetch(
+          `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: Cookies.get("token"),
+            },
+            body: JSON.stringify({
+              content: newMessage,
+            }),
           }
-          setTimeout(() => {
-            sendMessage(true);
-          }, 1000);
-        }
-      })
-      .catch((err) => {
-        setAlert({ text: err.message, type: "error" });
-      });
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+
+            if (data.status.code === 201) {
+              setMessages([...messages, data.data]);
+              setNewMessage("");
+            } else {
+              if (retry) {
+                throw new Error("Something went wrong");
+              }
+              setTimeout(() => {
+                sendMessage(true);
+              }, 1000);
+            }
+          })
+          .catch((err) => {
+            setAlert({ text: err.message, type: "error" });
+          });
+    }
   }
 
   return (
@@ -116,11 +142,11 @@ export default function Chat() {
               {admins[0].first_name} {admins[0].last_name}
             </h1>
           ) : (
-            <div className="relative">
+            <div className="relative px-2 border-transparent border hover:border-black rounded-full">
               <select
                 onChange={(e) => setContact(e.target.value)}
                 value={contact}
-                className="adminSelect pr-6 text-2xl font-bold bg-transparent"
+                className="adminSelect text-center pr-6 text-2xl font-bold bg-transparent"
               >
                 <option className="hidden" value="">
                   Choose contact
@@ -136,7 +162,9 @@ export default function Chat() {
             </div>
           )
         ) : (
-          <h1 className="text-2xl font-bold bg-transparent">{contact.first_name} {contact.last_name}</h1>
+          <h1 className="text-2xl font-bold bg-transparent">
+            {contact.first_name} {contact.last_name}
+          </h1>
         )}
       </div>
 
@@ -144,7 +172,14 @@ export default function Chat() {
         <div className="p-4 h-[inherit] overflow-y-scroll flex flex-col">
           {messages &&
             messages.map((message) => (
-              <div key={message.id} className={`${message.sender_id === currentUser.id ? "self-end bg-[#80ff80]" : "bg-blue-300"} p-3  rounded-lg w-fit my-2`}>
+              <div
+                key={message.id}
+                className={`${
+                  message.sender_id === currentUser.id
+                    ? "self-end bg-[#80ff80]"
+                    : "bg-blue-300"
+                } p-3  rounded-lg w-fit my-2`}
+              >
                 <p>{message.content}</p>
               </div>
             ))}

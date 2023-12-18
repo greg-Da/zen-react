@@ -1,8 +1,4 @@
-#main:first-child{
-    width: 100%;
+#main:first-child {
+  width: 100%;
 }
 
-.body{
-    background-color: rgb(255, 255, 255);
-    color: black;
-}

@@ -157,7 +157,7 @@ export default function Navbar() {
                               <Link to={"/admin/contacts"}>Contacts</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/addArticles"}>
+                              <Link to={"/admin/addItems"}>
                                 Add articles
                               </Link>
                             </MenuItem>
@@ -302,7 +302,7 @@ export default function Navbar() {
             <Link
               className="font-bold my-2"
               onClick={() => setUnfolded(false)}
-              to={"/admin/addArticles"}
+              to={"/admin/addItems"}
             >
               Add articles
             </Link>

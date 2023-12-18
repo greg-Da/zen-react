@@ -2,13 +2,14 @@ import { useState } from "react";
 import CardStore from "../../components/CardStore/CardStore";
 import { useEffect } from "react";
 import "./Store.css";
-import Cart from "../../components/Cart"
+import Cart from "../../components/Cart";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
 export default function Store() {
   const [data, setData] = useState([]);
   const [cart, setCart] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const currentUser = useSelector((state) => state.auth.user);
 
@@ -16,17 +17,21 @@ export default function Store() {
     fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/items")
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         setData(data.data);
       });
   }, []);
 
   useEffect(() => {
     if (currentUser.id) {
-      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart`, {
-        headers: {
-          Authorization: Cookies.get("token"),
-        },
-      })
+      fetch(
+        `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart`,
+        {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -67,25 +72,38 @@ export default function Store() {
         })
         .catch((err) => console.error(err));
     } else {
-      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${item.id}/cart_items`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: Cookies.get("token"),
-        },
-        body: JSON.stringify({
-          item_id: item.id,
-          cart_id: currentUser.id,
-          quantity: 1,
-        }),
-      })
+      fetch(
+        `https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${item.id}/cart_items`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: Cookies.get("token"),
+          },
+          body: JSON.stringify({
+            item_id: item.id,
+            cart_id: currentUser.id,
+            quantity: 1,
+          }),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
+          
           setCart((prev) => [...prev, data.data]);
         })
         .catch((err) => console.error(err));
     }
   }
+
+  useEffect(() => {
+    let total = 0;
+    cart.forEach((item) => {
+      total += parseFloat(item.price) * item.quantity;
+    });
+    setTotalPrice(total);
+  }, [cart])
 
   return (
     <div
@@ -98,6 +116,7 @@ export default function Store() {
         setOpenModal={setOpenModal}
         cart={cart}
         setCart={setCart}
+        totalPrice={totalPrice}
       />
 
       <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
