@@ -7,12 +7,14 @@ import { AlertContext } from "../components/Alert";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
+import apiUrl from "../ApiConfig";
 
 export default function AppointmentNew() {
   const [data, setData] = useState({});
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("9");
-  const [sesionsLeft, setSessionLeft] = useState(true)
+  // -1 = loading / 0 = false / 1 = true 
+  const [sesionsLeft, setSessionLeft] = useState(-1);
   const [appointment_type, setAppointmentType] = useState("Family");
 
   const currentUser = useSelector((state) => state.auth.user);
@@ -21,19 +23,22 @@ export default function AppointmentNew() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/available_appointment`, {
-      method: "GET",
-      headers: {
-        Authorization: Cookies.get("token"),
-      },
-    })
+    fetch(
+      `${apiUrl}/available_appointment`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: Cookies.get("token"),
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         if (data.status.code === 200 && data.data !== false) {
           setData(data.data);
         } else if (data.status.code === 200 && data.data === false) {
-          setSessionLeft(data.data);
+          data.data ? setSessionLeft(1) : setSessionLeft(0);
           console.log(data);
         } else {
           throw new Error(data.status.message);
@@ -52,7 +57,7 @@ export default function AppointmentNew() {
     console.log(date);
 
     fetch(
-      `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${data.id}`,
+      `${apiUrl}/users/${currentUser.id}/appointments/${data.id}`,
       {
         method: "PATCH",
         headers: {
@@ -79,7 +84,11 @@ export default function AppointmentNew() {
 
   return (
     <div className="py-4 px-4 lg:px-64 w-full">
-      {sesionsLeft === false ? (
+      {sesionsLeft === -1 ? (
+        <div className="w-full flex justify-center">
+          <i className="fa-solid fa-spinner my-5 text-5xl animate-spin-slow rounded-full"></i>
+        </div>
+      ) : sesionsLeft === 0 ? (
         <div className="bg-gray-300 p-3 font-bold text-2xl rounded-md text-center">
           <h1>Contact your doctor to get more session</h1>
         </div>

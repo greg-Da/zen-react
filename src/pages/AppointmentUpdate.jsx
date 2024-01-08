@@ -8,6 +8,7 @@ import Calendar from "react-calendar";
 import TimePicker from "../components/TimePicker/TimePicker";
 import { useContext } from "react";
 import { AlertContext } from "../components/Alert";
+import apiUrl from "../ApiConfig";
 
 export default function AppointmentUpdate() {
   const [data, setData] = useState({});
@@ -41,7 +42,7 @@ export default function AppointmentUpdate() {
     setDate(newDate);
     console.log(date);
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`${apiUrl}/users/${currentUser.id}/appointments/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

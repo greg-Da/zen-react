@@ -35,6 +35,7 @@ import { CheckoutForm } from "./pages/Checkout";
 import { CheckoutReturn } from "./pages/CheckoutReturn";
 import OrderNew from "./pages/OrderNew";
 import Contacts from "./pages/Admin/Contacts";
+import apiUrl from "./ApiConfig";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -43,7 +44,7 @@ function App() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (!currentUser.id && token !== undefined) {
-      fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/current_user", {
+      fetch(`${apiUrl}/current_user`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

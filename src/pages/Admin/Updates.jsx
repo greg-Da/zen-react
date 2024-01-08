@@ -2,12 +2,13 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import apiUrl from "../../ApiConfig";
 
 export default function Updates() {
   const [updates, setUpdates] = useState([]);
 
   useEffect(() => {
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/updates")
+    fetch(`${apiUrl}/updates`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status.code === 200) {
@@ -20,7 +21,7 @@ export default function Updates() {
   }, []);
 
   function handleDelete(id) {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`, {
+    fetch(`${apiUrl}/updates/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: Cookies.get("token"),

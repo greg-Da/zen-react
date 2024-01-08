@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { AlertContext } from "../../components/Alert";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import apiUrl from "../../ApiConfig";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -27,7 +28,7 @@ export default function Chat() {
   useEffect(() => {
     if (id === undefined) {
       fetch(
-        "https://zen-counseling-production-4a7de6447247.herokuapp.com/index_admins",
+        `${apiUrl}/index_admins`,
         {
           headers: {
             Authorization: Cookies.get("token"),
@@ -41,7 +42,7 @@ export default function Chat() {
         });
     } else {
       fetch(
-        `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${id}`,
+        `${apiUrl}/users/${id}`,
         {
           headers: {
             Authorization: Cookies.get("token"),
@@ -67,7 +68,7 @@ export default function Chat() {
     {
       userId > 0 &&
         fetch(
-          `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`,
+          `${apiUrl}/users/${userId}/private_messages`,
           {
             method: "GET",
             headers: {
@@ -84,6 +85,7 @@ export default function Chat() {
   }, [admins, contact, id]);
 
   function handleChange(e) {
+    ref.current.style.height = 0;
     ref.current.style.height = ref.current.scrollHeight + "px";
     setNewMessage(e.target.value);
   }
@@ -99,7 +101,7 @@ export default function Chat() {
     {
       userId > 0 &&
         fetch(
-          `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${userId}/private_messages`,
+          `${apiUrl}/users/${userId}/private_messages`,
           {
             method: "POST",
             headers: {
@@ -135,7 +137,7 @@ export default function Chat() {
 
   return (
     <div className="backgroundLeaves w-full bg-beige overflow-hidden">
-      <div className="flex py-2 bg-beige border-b-2 border-black drop-shadow-lg justify-center">
+      <div className="fixed w-full z-40 flex py-2 bg-beige border-b-2 border-black drop-shadow-lg justify-center">
         {id === undefined ? (
           admins.length === 1 ? (
             <h1 className="text-2xl font-bold bg-transparent">
@@ -168,7 +170,7 @@ export default function Chat() {
         )}
       </div>
 
-      <div className="h-[93%]">
+      <div className="h-[93%] mt-12">
         <div className="p-4 h-[inherit] overflow-y-scroll flex flex-col">
           {messages &&
             messages.map((message) => (
@@ -188,8 +190,8 @@ export default function Chat() {
         <div className="flex items-center bg-white border-2 border-black rounded-3xl mx-2 py-1 px-2">
           <textarea
             ref={ref}
-            onChange={(e) => handleChange(e)}
-            className="w-full max-h-20 h-6 resize-none  border-0 outline-none rounded-full"
+            onInput={(e) => handleChange(e)}
+            className="w-full max-h-14 h-6 resize-none  border-0 outline-none rounded-full"
             placeholder="Type your message"
             type="text"
           ></textarea>

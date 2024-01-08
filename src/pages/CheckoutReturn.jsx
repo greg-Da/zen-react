@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import apiUrl from '../ApiConfig';
 
 const CheckoutReturn = () => {
   const [status, setStatus] = useState(null);
@@ -17,7 +18,7 @@ const CheckoutReturn = () => {
     const sessionId = urlParams.get("session_id");
 
     fetch(
-      `https://zen-counseling-production-4a7de6447247.herokuapp.com/${type}/${id}/session-status?session_id=${sessionId}`, {
+      `${apiUrl}/${type}/${id}/session-status?session_id=${sessionId}`, {
         headers: {
           Authorization: Cookies.get("token"),
         }

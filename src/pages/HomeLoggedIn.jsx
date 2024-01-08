@@ -4,6 +4,7 @@ import CardMeeting from "../components/CardMeeting";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import Cookies from "js-cookie";
+import apiUrl from "../ApiConfig";
 
 export default function HomeLoggedIn() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -13,7 +14,7 @@ export default function HomeLoggedIn() {
   useEffect(() => {
     {
       currentUser.id &&
-        fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/invoices`, {
+        fetch(`${apiUrl}/users/${currentUser.id}/invoices`, {
           headers: {
             Authorization: Cookies.get("token"),
           },
@@ -36,7 +37,7 @@ export default function HomeLoggedIn() {
   useEffect(() => {
     {
       currentUser.id &&
-        fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/confirmed_appointments`, {
+        fetch(`${apiUrl}/confirmed_appointments`, {
           headers: {
             Authorization: Cookies.get("token"),
           },
@@ -57,7 +58,7 @@ export default function HomeLoggedIn() {
   }, [currentUser]);
 
   function downloadInvoice(id) {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/invoices/${id}/download_pdf`, {
+    fetch(`${apiUrl}/invoices/${id}/download_pdf`, {
       headers: {
         Authorization: Cookies.get("token"),
       },

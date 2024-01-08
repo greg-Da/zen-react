@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AlertContext } from "../../components/Alert";
+import apiUrl from "../../ApiConfig";
 
 export default function AddItems() {
   const [title, setTitle] = useState("");
@@ -27,7 +28,7 @@ export default function AddItems() {
     formData.append("item[stock]", stock);
     formData.append("item[description]", description);
 
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/items", {
+    fetch(`${apiUrl}/items`, {
       method: "POST",
       headers: {
         Authorization: Cookies.get("token"),

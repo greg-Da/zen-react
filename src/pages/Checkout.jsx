@@ -7,6 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useParams } from "react-router-dom";
 import Cookies from "js-cookie";
+import apiUrl from "../ApiConfig";
 
 const stripePromise = loadStripe(
   "pk_test_51NkTOXHGPrfYJoPuOg0oKfft9u1JLEHY3WxZc6Mcg0aZ1K3dApKIgBmoHtR9nktKPn8in1KFLacTWKuZ4RbIxUOT00cpGDi9mt"
@@ -19,7 +20,7 @@ const CheckoutForm = () => {
 
   useEffect(() => {
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/${type}/${id}/create_checkout_session`, {
+    fetch(`${apiUrl}/${type}/${id}/create_checkout_session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

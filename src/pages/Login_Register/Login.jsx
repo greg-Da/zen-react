@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logIn } from "../../state/auth/authSlice";
 import "./style.css";
+import apiUrl from "../../ApiConfig";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ export default function Login() {
         password,
       },
     };
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users/sign_in", {
+    fetch(`${apiUrl}/users/sign_in`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -67,7 +68,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="text"
-              placeholder="Enter your username/email"
+              placeholder="Enter your email"
             />
             <TextField
               value={password}

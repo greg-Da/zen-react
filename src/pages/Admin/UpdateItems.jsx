@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import apiUrl from "../../ApiConfig";
 
 export default function UpdateItems() {
   const [title, setTitle] = useState("");
@@ -17,7 +18,7 @@ export default function UpdateItems() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${id}`)
+    fetch(`${apiUrl}/items/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -40,7 +41,7 @@ export default function UpdateItems() {
       data.append(`item[images][]`, image);
     });
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${id}`, {
+    fetch(`${apiUrl}/items/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: Cookies.get("token"),
@@ -58,7 +59,7 @@ export default function UpdateItems() {
   }
 
   function handleDelete() {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${id}`, {
+    fetch(`${apiUrl}/items/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

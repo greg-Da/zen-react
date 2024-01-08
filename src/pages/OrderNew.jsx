@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import apiUrl from "../ApiConfig";
 
 export default function OrderNew() {
   const [address, setAddress] = useState("");
@@ -11,7 +12,7 @@ export default function OrderNew() {
 
   function handleSubmit() {
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/orders`, {
+    fetch(`${apiUrl}/users/${currentUser.id}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

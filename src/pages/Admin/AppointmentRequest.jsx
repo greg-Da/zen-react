@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { AlertContext } from "../../components/Alert";
 import { useSelector } from "react-redux";
+import apiUrl from "../../ApiConfig";
 
 export default function AppointmentRequest() {
   const [appointments, setAppointments] = useState([]);
@@ -12,7 +13,7 @@ export default function AppointmentRequest() {
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/pending_appointments`, {
+    fetch(`${apiUrl}/pending_appointments`, {
       method: "GET",
       headers: {
         Authorization: Cookies.get("token"),
@@ -34,7 +35,7 @@ export default function AppointmentRequest() {
   }, [setAlert]);
 
   function updateRequest(accept, id) {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`${apiUrl}/users/${currentUser.id}/appointments/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

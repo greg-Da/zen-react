@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import FileInput from "../../components/FileInput";
+import apiUrl from "../../ApiConfig";
 
 export default function UpdateUpdates() {
   const [title, setTitle] = useState("");
@@ -16,7 +17,7 @@ export default function UpdateUpdates() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`)
+    fetch(`${apiUrl}/updates/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -40,7 +41,7 @@ export default function UpdateUpdates() {
       data.append("update[image]", image);
     }
 
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`, {
+    fetch(`${apiUrl}/updates/${id}`, {
       method: "PATCH",
       headers: {
         Authorization: Cookies.get("token"),
@@ -69,7 +70,7 @@ export default function UpdateUpdates() {
   }
 
   function handleDelete() {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/updates/${id}`, {
+    fetch(`${apiUrl}/updates/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

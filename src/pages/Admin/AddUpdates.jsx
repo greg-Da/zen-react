@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FileInput from "../../components/FileInput";
+import apiUrl from "../../ApiConfig";
 
 export default function AddUpdates() {
   const [title, setTitle] = useState("");
@@ -18,7 +19,7 @@ export default function AddUpdates() {
     data.append("update[content]", content);
     data.append("update[image]", image);
 
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/updates", {
+    fetch(`${apiUrl}/updates`, {
       method: "POST",
       headers: {
         Authorization: Cookies.get("token"),

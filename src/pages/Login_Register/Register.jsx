@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { AlertContext } from "../../components/Alert";
 import { logIn } from "../../state/auth/authSlice";
 import './style.css'
+import apiUrl from "../../ApiConfig";
 
 export default function Register() {
   const [firstName, setFirstName] = useState("");
@@ -32,7 +33,7 @@ export default function Register() {
         password_confirmation,
       },
     };
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users", {
+    fetch(`${apiUrl}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

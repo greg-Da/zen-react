@@ -5,6 +5,7 @@ import "./Store.css";
 import Cart from "../../components/Cart";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import apiUrl from "../../ApiConfig";
 
 export default function Store() {
   const [data, setData] = useState([]);
@@ -14,7 +15,7 @@ export default function Store() {
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/items")
+    fetch(`${apiUrl}/items`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -25,7 +26,7 @@ export default function Store() {
   useEffect(() => {
     if (currentUser.id) {
       fetch(
-        `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart`,
+        `${apiUrl}/cart`,
         {
           headers: {
             Authorization: Cookies.get("token"),
@@ -49,7 +50,7 @@ export default function Store() {
       setCart(updatedCart);
 
       fetch(
-        `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`,
+        `${apiUrl}/cart/cart_items/${cart[index].cart_item_id}`,
         {
           method: "PATCH",
           headers: {
@@ -73,7 +74,7 @@ export default function Store() {
         .catch((err) => console.error(err));
     } else {
       fetch(
-        `https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${item.id}/cart_items`,
+        `${apiUrl}/items/${item.id}/cart_items`,
         {
           method: "POST",
           headers: {

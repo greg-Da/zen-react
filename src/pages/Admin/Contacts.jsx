@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import apiUrl from "../../ApiConfig";
 
 export default function Contacts() {
   const [search, setSearch] = useState("");
@@ -9,7 +10,7 @@ export default function Contacts() {
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users", {
+    fetch(`${apiUrl}/users`, {
       headers: {
         Authorization: Cookies.get("token"),
       },

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Cart from "../components/Cart";
+import apiUrl from "../ApiConfig";
 
 export default function Product() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -18,7 +19,7 @@ export default function Product() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${id}`)
+    fetch(`${apiUrl}/items/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -36,7 +37,7 @@ export default function Product() {
 
   useEffect(() => {
     if (currentUser.id) {
-      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/cart`, {
+      fetch(`${apiUrl}/cart`, {
         headers: {
           Authorization: Cookies.get("token"),
         },
@@ -58,7 +59,7 @@ export default function Product() {
       setCart(updatedCart);
 
       fetch(
-        `https://zen-counseling-production-4a7de6447247.herokuapp.com/cart/cart_items/${cart[index].cart_item_id}`,
+        `${apiUrl}/cart/cart_items/${cart[index].cart_item_id}`,
         {
           method: "PATCH",
           headers: {
@@ -81,7 +82,7 @@ export default function Product() {
         })
         .catch((err) => console.error(err));
     } else {
-      fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/items/${item.id}/cart_items`, {
+      fetch(`${apiUrl}/items/${item.id}/cart_items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

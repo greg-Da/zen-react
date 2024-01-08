@@ -6,6 +6,7 @@ import "react-calendar/dist/Calendar.css";
 import "./Calendar.css";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import apiUrl from "../../../ApiConfig";
 
 export default function CalendarPage() {
   const [appointments, setAppointments] = useState([]);
@@ -14,7 +15,7 @@ export default function CalendarPage() {
 
   useEffect(() => {
     fetch(
-      `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${
+      `${apiUrl}/users/${
         currentUser.id
       }/appointments/by_date/${date.getFullYear()}-${
         date.getMonth() + 1
@@ -40,7 +41,7 @@ export default function CalendarPage() {
   return (
     <div className="py-4 px-4 lg:px-64 w-full">
       <div className="flex justify-center">
-        <Calendar value={date} onChange={handleDateChange} calendarType="US" />
+        <Calendar value={date} onChange={handleDateChange} calendarType="gregory" />
       </div>
 
       <div>

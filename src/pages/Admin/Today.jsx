@@ -3,6 +3,7 @@ import { useState } from "react";
 import CardMeeting from "../../components/CardMeeting";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import apiUrl from "../../ApiConfig";
 
 export default function Today() {
   const [appointments, setAppointments] = useState([]);
@@ -10,7 +11,7 @@ export default function Today() {
 
   useEffect(() => {
     fetch(
-      `https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${
+      `${apiUrl}/users/${
         currentUser.id
       }/appointments/by_date/${new Date().toISOString().slice(0, 10)}`,
       {

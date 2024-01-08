@@ -2,6 +2,7 @@ import { useState } from "react";
 import picture from "/Dr_Hanson.png?url";
 import { useEffect } from "react";
 import "./Home.css";
+import apiUrl from "../../ApiConfig";
 import Modal from "../../components/Modal";
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
 
   useEffect(() => {
     fetch(
-      "https://zen-counseling-production-4a7de6447247.herokuapp.com/updates"
+      `${apiUrl}/updates`
     )
       .then((res) => res.json())
       .then((data) => {

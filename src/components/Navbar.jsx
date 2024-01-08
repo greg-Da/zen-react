@@ -24,7 +24,6 @@ export default function Navbar() {
   let dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.auth.user);
-  
 
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openAdminDropdown, setOpenAdminDropdown] = useState(false);
@@ -85,10 +84,14 @@ export default function Navbar() {
   }, [openAdminDropdown]);
 
   return (
-    <nav className="absolute top-0 z-50 w-full min-h-[5vh] bg-green text-white p-2 shadow-lg">
+    <nav className="fixed top-0 z-50 w-full  bg-green text-white p-2 shadow-lg">
       <div className="flex justify-between">
         <div>
-          <Link className="font-bold text-3xl" to={"/"}>
+          <Link
+            className="font-bold text-3xl"
+            to={"/"}
+            onClick={() => setUnfolded(false)}
+          >
             Home
           </Link>
         </div>
@@ -157,9 +160,7 @@ export default function Navbar() {
                               <Link to={"/admin/contacts"}>Contacts</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/addItems"}>
-                                Add articles
-                              </Link>
+                              <Link to={"/admin/addItems"}>Add articles</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
                               <Link to={"/admin/updates"}>Updates</Link>
@@ -321,7 +322,12 @@ export default function Navbar() {
             {/* <Link className="my-2 font-bold" onClick={() => setUnfolded(false)} to={"/profile"}>
               Profile
             </Link> */}
-            <Link className="my-2 font-bold" onClick={(e) => handleLogout(e, true)}>Log Out</Link>
+            <Link
+              className="my-2 font-bold"
+              onClick={(e) => handleLogout(e, true)}
+            >
+              Log Out
+            </Link>
           </>
         ) : (
           <>

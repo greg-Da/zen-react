@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { AlertContext } from "../../components/Alert";
+import apiUrl from "../../ApiConfig";
 
 export default function Invoice() {
   const [search, setSearch] = useState("");
@@ -15,7 +16,7 @@ export default function Invoice() {
   const { setAlert } = useContext(AlertContext);
 
   useEffect(() => {
-    fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users", {
+    fetch(`${apiUrl}/users`, {
       headers: {
         Authorization: Cookies.get("token"),
       },
@@ -51,7 +52,7 @@ export default function Invoice() {
   }
 
   function handleSubmit(id) {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${id}/invoices`, {
+    fetch(`${apiUrl}/users/${id}/invoices`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

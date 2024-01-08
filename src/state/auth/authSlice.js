@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
+import apiUrl from "../../ApiConfig";
 
 const initialState = {
   user: {},
@@ -19,7 +20,7 @@ const auth = createSlice({
     },
     logOut: (state) => {
       state.user = {};
-      fetch("https://zen-counseling-production-4a7de6447247.herokuapp.com/users/sign_out", {
+      fetch(`${apiUrl}/users/sign_out`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

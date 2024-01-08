@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import apiUrl from '../ApiConfig';
 
 export default function AppointmentShow() {
   const [data, setData] = useState({});
@@ -13,7 +14,7 @@ export default function AppointmentShow() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`${apiUrl}/users/${currentUser.id}/appointments/${id}`, {
       headers: {
         Authorization: Cookies.get("token"),
       },
@@ -26,7 +27,7 @@ export default function AppointmentShow() {
   }, [currentUser, id]);
 
   function handleCancel() {
-    fetch(`https://zen-counseling-production-4a7de6447247.herokuapp.com/users/${currentUser.id}/appointments/${id}`, {
+    fetch(`${apiUrl}/users/${currentUser.id}/appointments/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
