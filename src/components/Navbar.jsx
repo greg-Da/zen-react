@@ -210,9 +210,9 @@ export default function Navbar() {
                             id="composition-menu"
                             aria-labelledby="composition-button"
                           >
-                            {/* <MenuItem onClick={handleClose}>
+                            <MenuItem onClick={handleClose}>
                               <Link to={"/profile"}>Profile</Link>
-                            </MenuItem> */}
+                            </MenuItem>
                             <MenuItem onClick={(e) => handleLogout(e, false)}>
                               Logout
                             </MenuItem>
@@ -319,9 +319,9 @@ export default function Navbar() {
 
         {checkAuth() ? (
           <>
-            {/* <Link className="my-2 font-bold" onClick={() => setUnfolded(false)} to={"/profile"}>
+            <Link className="my-2 font-bold" onClick={() => setUnfolded(false)} to={"/profile"}>
               Profile
-            </Link> */}
+            </Link>
             <Link
               className="my-2 font-bold"
               onClick={(e) => handleLogout(e, true)}
