@@ -65,11 +65,11 @@ export default function HomeLoggedIn() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = data.data;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.download = 'invoice.pdf';
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.download = "invoice.pdf";
         link.click();
       });
   }
@@ -149,15 +149,17 @@ export default function HomeLoggedIn() {
               <p>Amount: {invoice.total}$</p>
               <p>x{invoice.appointment_number}</p>
             </div>
-            <i
-              onClick={() => downloadInvoice(invoice.id)}
-              className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"
-            ></i>
-            {invoice.status === "unpaid" && (
-              <Link to={`/checkout/invoices/${invoice.id}`}>
-                <i className="fa-regular fa-credit-card text-blue-500 text-2xl ml-2 cursor-pointer"></i>
-              </Link>
-            )}
+            <div className="w-2/5 flex justify-end">
+              {invoice.status === "unpaid" && (
+                <Link to={`/checkout/invoices/${invoice.id}`}>
+                  <i className="fa-regular fa-credit-card text-blue-500 text-2xl ml-2 cursor-pointer"></i>
+                </Link>
+              )}
+              <i
+                onClick={() => downloadInvoice(invoice.id)}
+                className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"
+              ></i>
+            </div>
           </div>
         ))}
       </div>
