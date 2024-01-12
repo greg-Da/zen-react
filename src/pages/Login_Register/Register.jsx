@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { useContext } from "react";
 import { AlertContext } from "../../components/Alert";
 import { logIn } from "../../state/auth/authSlice";
-import './style.css'
+import "./style.css";
 import apiUrl from "../../ApiConfig";
 
 export default function Register() {
@@ -16,13 +16,14 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password_confirmation, setPassword_confirmation] = useState("");
+  const [isValid, setIsValid] = useState(true);
   const { setAlert } = useContext(AlertContext);
 
   let dispatch = useDispatch();
   let navigate = useNavigate();
 
   function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     const data = {
       user: {
@@ -46,16 +47,15 @@ export default function Register() {
             expires: 1,
             sameSite: "strict",
           });
-        } 
+        }
         const data = res.json();
         return data;
-
       })
       .then((data) => {
-        console.log(data)
+        console.log(data);
 
-        if(data.status.code !== 200){
-          throw new Error(data.status.message)
+        if (data.status.code !== 200) {
+          throw new Error(data.status.message);
         }
 
         setAlert({ text: "Registered successfully", type: "success" });
@@ -66,6 +66,19 @@ export default function Register() {
         console.error(err);
         setAlert({ text: err.message, type: "error" });
       });
+  }
+
+  function checkPassword(value) {
+    const digitRegex = /\d/;
+    const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const uppercaseRegex = /[A-Z]/;
+
+    const containsDigit = digitRegex.test(value);
+    const containsSpecialChar = specialCharRegex.test(value);
+    const containsUppercase = uppercaseRegex.test(value);
+
+    setIsValid(containsDigit && containsSpecialChar && containsUppercase);
+    setPassword(value);
   }
 
   return (
@@ -93,19 +106,29 @@ export default function Register() {
               placeholder="Enter your email"
             />
             <TextField
+              className={`${isValid ? "" : ""}`}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => checkPassword(e.target.value)}
               type="password"
               placeholder="Enter your password"
             />
+            <small className={`${isValid ? "hidden" : "block"} text-red-500`}>
+              Your password needs to be at least 6 characters long and to include an uppercase letter, a digit and a
+              special character
+            </small>
+
             <TextField
               value={password_confirmation}
               onChange={(e) => setPassword_confirmation(e.target.value)}
               type="password"
               placeholder="Enter your password confirmation"
             />
+
             <div className="flex justify-center">
-              <button className="bg-green px-3 py-2 rounded-full text-white font-bold" onClick={(e) => handleSubmit(e)}>
+              <button
+                className="bg-green px-3 py-2 rounded-full text-white font-bold"
+                onClick={(e) => handleSubmit(e)}
+              >
                 Register
               </button>
             </div>
