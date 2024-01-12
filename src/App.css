@@ -23,3 +23,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.trigger:hover .popover {
+  display: block;
+}
+
+.popover {
+  display: none;
+}

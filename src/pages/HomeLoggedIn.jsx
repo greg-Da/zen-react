@@ -149,16 +149,34 @@ export default function HomeLoggedIn() {
               <p>Amount: {invoice.total}$</p>
               <p>x{invoice.appointment_number}</p>
             </div>
-            <div className="w-2/5 flex justify-end">
-              {invoice.status === "unpaid" && (
-                <Link to={`/checkout/invoices/${invoice.id}`}>
-                  <i className="fa-regular fa-credit-card text-blue-500 text-2xl ml-2 cursor-pointer"></i>
-                </Link>
+            <div className="w-3/5 flex justify-end">
+              {invoice.refundable === "unpaid" && (
+                <div className="trigger relative h-6 w-6 cursor-pointer flex justify-center items-center bg-orange-500 rounded-full">
+                  <i className="fa-solid fa-dollar-sign text-white text-xl"></i>
+                  <div className="popover absolute bg-white w-max mt-16 p-1 border">
+                    <p>Ask for a refund</p>
+                  </div>
+                </div>
               )}
-              <i
-                onClick={() => downloadInvoice(invoice.id)}
-                className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"
-              ></i>
+              {invoice.status === "unpaid" && (
+                <div className="trigger">
+                  <Link to={`/checkout/invoices/${invoice.id}`}>
+                    <i className="fa-regular fa-credit-card text-blue-500 text-2xl ml-2 cursor-pointer"></i>
+                  </Link>
+                  <div className="popover absolute bg-white w-max -ml-16 p-1 border">
+                    <p>Proceed to payment</p>
+                  </div>
+                </div>
+              )}
+              <div className="trigger relative">
+                <i
+                  onClick={() => downloadInvoice(invoice.id)}
+                  className="fa-solid fa-circle-arrow-down text-blue-500 text-2xl ml-2 cursor-pointer"
+                ></i>
+                <div className="popover absolute bg-white w-max -ml-24 p-1 border">
+                  <p>Download invoice</p>
+                </div>
+              </div>
             </div>
           </div>
         ))}
