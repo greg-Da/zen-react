@@ -39,7 +39,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <div className="flex justify-center">
         <Calendar value={date} onChange={handleDateChange} calendarType="gregory" />
       </div>

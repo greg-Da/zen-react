@@ -40,7 +40,7 @@ export default function AddUpdates() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <h1 className="font-bold text-3xl">Add a new update</h1>
       <div className="flex justify-center">
         {imageDisplay && imageDisplay !== "" ? (

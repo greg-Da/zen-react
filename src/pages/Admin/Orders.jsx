@@ -70,7 +70,7 @@ export default function Orders() {
   }
 
   return (
-    <div className="w-full py-4 px-4 lg:px-64">
+    <div className="w-full py-4 px-4 lg:px-64 mt-5">
       <h1 className="text-4xl font-bold">Orders</h1>
       <div>
         <p>Pending orders</p>

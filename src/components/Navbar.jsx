@@ -141,32 +141,32 @@ export default function Navbar() {
                             aria-labelledby="admin-button"
                           >
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/today"}>
+                              <Link className='w-full' to={"/admin/today"}>
                                 Today's appointments
                               </Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/calendar"}>Calendar</Link>
+                              <Link className='w-full' to={"/admin/calendar"}>Calendar</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/request"}>
+                              <Link className='w-full' to={"/admin/request"}>
                                 Appointments request
                               </Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/invoices"}>Invoices</Link>
+                              <Link className='w-full' to={"/admin/invoices"}>Invoices</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/orders"}>Orders</Link>
+                              <Link className='w-full' to={"/admin/orders"}>Orders</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/contacts"}>Contacts</Link>
+                              <Link className='w-full' to={"/admin/contacts"}>Contacts</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/addItems"}>Add articles</Link>
+                              <Link className='w-full' to={"/admin/addItems"}>Add articles</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
-                              <Link to={"/admin/updates"}>Updates</Link>
+                              <Link className='w-full' to={"/admin/updates"}>Updates</Link>
                             </MenuItem>
                           </MenuList>
                         </ClickAwayListener>
@@ -214,7 +214,7 @@ export default function Navbar() {
                             aria-labelledby="composition-button"
                           >
                             <MenuItem onClick={handleClose}>
-                              <Link to={"/profile"}>Profile</Link>
+                              <Link className="w-full" to={"/profile"}>Profile</Link>
                             </MenuItem>
                             <MenuItem onClick={(e) => handleLogout(e, false)}>
                               Logout

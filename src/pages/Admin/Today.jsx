@@ -28,7 +28,7 @@ export default function Today() {
   }, [currentUser]);
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <h1 className="text-4xl font-bold">Hello {currentUser.first_name}</h1>
 
       <h2 className="mt-3 font-bold text-2xl">Today's appointments</h2>

@@ -137,7 +137,7 @@ export default function Chat() {
 
   return (
     <div className="backgroundLeaves w-full bg-beige overflow-hidden">
-      <div className="fixed w-full z-40 flex py-2 bg-beige border-b-2 border-black drop-shadow-lg justify-center">
+      <div className="fixed w-full z-40 flex pt-4 pb-2 bg-beige border-b-2 border-black drop-shadow-lg justify-center">
         {id === undefined ? (
           admins.length === 1 ? (
             <h1 className="text-2xl font-bold bg-transparent">

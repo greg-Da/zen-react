@@ -42,7 +42,7 @@ const CheckoutReturn = () => {
 
   if (status === "complete") {
     return (
-      <section className="w-full py-4 px-4 lg:px-64 text-center" id="success">
+      <section className="w-full py-4 px-4 lg:px-64 mt-5 text-center" id="success">
         <h1 className="text-2xl font-bold">Your payment has been successful</h1>
         <i className="fa-solid fa-spinner my-5 text-5xl animate-spin-slow rounded-full"></i>
         <p className="">You are going to redirected in a few seconds</p>

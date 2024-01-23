@@ -83,7 +83,7 @@ export default function AppointmentNew() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       {sesionsLeft === -1 ? (
         <div className="w-full flex justify-center">
           <i className="fa-solid fa-spinner my-5 text-5xl animate-spin-slow rounded-full"></i>

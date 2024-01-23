@@ -46,7 +46,7 @@ const CheckoutForm = () => {
   }, [type, id]);
 
   return (
-    <div className="w-full py-4 px-4 lg:px-64" id="checkout">
+    <div className="w-full py-4 px-4 lg:px-64 mt-5" id="checkout">
       {clientSecret && (
         <EmbeddedCheckoutProvider
           stripe={stripePromise}

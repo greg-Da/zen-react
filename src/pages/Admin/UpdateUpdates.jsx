@@ -88,8 +88,8 @@ export default function UpdateUpdates() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
-      <h1 className="font-bold text-3xl">Update {title}</h1>
+    <div className="py-4 px-4 mt-5 w-full">
+      <h1 className="font-bold text-3xl mb-5">Update {title}</h1>
 
       {image === "" || image === undefined ? (
         <div className="flex justify-center">

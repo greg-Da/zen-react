@@ -57,7 +57,7 @@ export default function AppointmentRequest() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <h1 className="text-2xl font-bold ">Appointment request</h1>
       <div className="mt-3">
         {appointments.map((item) => (

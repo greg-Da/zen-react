@@ -76,7 +76,7 @@ export default function AppointmentUpdate() {
     }
   }
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       {lessThan2Days() ? (
         <h1 className="text-2xl font-bold">
           Rescheduling is not possible at this date

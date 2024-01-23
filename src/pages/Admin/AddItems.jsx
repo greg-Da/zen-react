@@ -59,7 +59,7 @@ export default function AddItems() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <h1 className="text-3xl font-bold">Add Articles</h1>
       <div className="flex justify-center mt-5">
         <div

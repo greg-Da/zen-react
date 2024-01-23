@@ -140,7 +140,7 @@ export default function OrderNew() {
   }
 
   return (
-    <div className="w-full py-4 px-4 lg:px-64">
+    <div className="w-full py-4 px-4 lg:px-64 mt-5">
       <h1 className="text-2xl font-bold">Your address</h1>
 
       <div>

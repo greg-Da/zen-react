@@ -36,7 +36,7 @@ export default function Updates() {
   }
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <div className="flex justify-end">
         <Link to={"/admin/addUpdate"}>
           <button className="bg-blue-500 py-1 px-3 text-2xl font-bold rounded-full text-white">

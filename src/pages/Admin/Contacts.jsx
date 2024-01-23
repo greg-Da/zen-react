@@ -38,7 +38,7 @@ export default function Contacts() {
   }, [search]);
 
   return (
-    <div className="py-4 px-4 lg:px-64 w-full">
+    <div className="py-4 px-4 lg:px-64 mt-5 w-full">
       <div className="flex w-full border-2 border-gray-300 rounded-full p-2">
         <input
           className="w-full outline-none"

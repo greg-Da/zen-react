@@ -101,7 +101,7 @@ export default function HomeLoggedIn() {
   }
 
   return (
-    <div className="w-full py-4 px-4 lg:px-64">
+    <div className="w-full py-4 px-4 lg:px-64 mt-5">
       <h1 className="text-4xl">Hello {currentUser.first_name}</h1>
 
       <Link

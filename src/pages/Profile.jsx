@@ -72,7 +72,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full py-4 px-4 lg:px-64">
+    <div className="w-full py-4 px-4 lg:px-64 mt-5">
       <h1 className="text-3xl font-bold mb-5">My account</h1>
       <div className="border-2 rounded p-3 bg-gray-300">
         <p className="font-bold text-xl">First Name</p>

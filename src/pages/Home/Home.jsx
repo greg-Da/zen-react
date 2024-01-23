@@ -40,7 +40,7 @@ export default function Home() {
     <div
       className={`${
         openModal ? "overflow-hidden h-[88.5vh]" : ""
-      } py-4 px-4 lg:px-64 w-full overflow-hidden`}
+      } py-4 px-4 lg:px-64 mt-5 w-full overflow-hidden`}
     >
       <div className="flex flex-col items-center">
         <img
