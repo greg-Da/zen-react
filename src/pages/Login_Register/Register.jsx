@@ -83,7 +83,7 @@ export default function Register() {
 
   return (
     <div className="backgroundLeaves flex w-full bg-beige relative">
-      <div className="m-auto w-4/6">
+      <div className="m-auto w-4/6 lg:w-2/5">
         <Card className="p-10 border-2 border-black">
           <h1 className="text-center mb-5 font-bold text-3xl">Register</h1>
           <form className="grid gap-y-5">

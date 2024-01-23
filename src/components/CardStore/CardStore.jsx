@@ -18,7 +18,7 @@ export default function CardStore({
         </Link>
       </div>
 
-      <div className="p-2">
+      <div className="p-2 relative" style={{minHeight: '8em'}}>
         <div className="flex justify-between mt-2">
           <Link to={`/product/${id}`}>
             <p className="font-bold text-xl">{title}</p>
@@ -33,13 +33,13 @@ export default function CardStore({
           {checkAuth() ? (
             <div
               onClick={() => addToCart()}
-              className="cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center"
+              className="absolute bottom-1 right-1 cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center"
             >
               <i className="fa-solid fa-cart-arrow-down text-white text-xl"></i>
             </div>
           ) : (
             <Link to={"/login"}>
-              <div className="cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center">
+              <div className="absolute bottom-2 right-2 cursor-pointer bg-green rounded-full h-10 w-10 flex justify-center items-center">
                 <i className="fa-solid fa-cart-arrow-down text-white text-xl"></i>
               </div>
             </Link>
