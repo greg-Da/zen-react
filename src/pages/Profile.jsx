@@ -18,42 +18,51 @@ export default function Profile() {
   const [editLastName, setEditLastName] = useState(false);
   const [editEmail, setEditEmail] = useState(false);
 
-     
-    useEffect(() => {
-      fetch(`http://127.0.0.1:3000/user_profile`, {
-        method: "GET",
-        headers: {
-          Authorization: Cookies.get("token"),
-        }
+  useEffect(() => {
+    fetch(`${apiUrl}/user_profile`, {
+      method: "GET",
+      headers: {
+        Authorization: Cookies.get("token"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setEmail(data.data.email);
+        setFirstName(data.data.first_name);
+        setLastName(data.data.last_name);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setEmail(data.data.email);
-          setFirstName(data.data.first_name);
-          setLastName(data.data.last_name);
-        })
-        .catch((err) => console.log(err));
-    }, []);
+      .catch((err) => console.log(err));
+  }, []);
 
   function handleSubmit() {
     fetch(`${apiUrl}/users`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: Cookies.get("token"),
       },
       body: JSON.stringify({
-        first_name: firstName,
-        last_name: lastName,
-        full_name: `${firstName} ${lastName}`,
-        email,
-        current_password: password,
-        password: passwordNew,
-        password_confirmation: passwordConfirmation,
+        user: {
+          first_name: firstName,
+          last_name: lastName,
+          full_name: `${firstName} ${lastName}`,
+          email,
+          current_password: password,
+          password: passwordNew,
+          password_confirmation: passwordConfirmation,
+        },
       }),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log(data);
+        setPasswordChange(false);
+        setPasswordNew("");
+        setPasswordConfirmation("");
+        setPassword("");
+      
+      })
       .catch((err) => console.log(err));
   }
 
@@ -83,7 +92,7 @@ export default function Profile() {
               editFirstName ? "hidden" : "block"
             } flex align-center justify-between`}
           >
-            <p className="font-bold">{firstName} greg</p>
+            <p className="font-bold">{firstName}</p>
             <button
               onClick={() => setEditFirstName(true)}
               className="bg-gray-500 rounded-sm text-white font-bold px-2"
@@ -111,7 +120,7 @@ export default function Profile() {
               editLastName ? "hidden" : "block"
             } flex align-center justify-between`}
           >
-            <p className="font-bold">{lastName} greg</p>
+            <p className="font-bold">{lastName}</p>
             <button
               onClick={() => setEditLastName(true)}
               className="bg-gray-500 rounded-sm text-white font-bold px-2"
@@ -137,7 +146,7 @@ export default function Profile() {
               editEmail ? "hidden" : "block"
             } flex align-center justify-between`}
           >
-            <p className="font-bold">{email} greg</p>
+            <p className="font-bold">{email}</p>
             <button
               onClick={() => setEditEmail(true)}
               className="bg-gray-500 rounded-sm text-white font-bold px-2"
@@ -184,7 +193,13 @@ export default function Profile() {
         Delete account
       </button>
 
-      <div className={`${passwordChange || editEmail || editFirstName || editLastName ? "block" : "hidden"} flex justify-center mt-5`}>
+      <div
+        className={`${
+          passwordChange || editEmail || editFirstName || editLastName
+            ? "block"
+            : "hidden"
+        } flex justify-center mt-5`}
+      >
         <button
           onClick={() => handleOpenmodale(false)}
           className={`${
