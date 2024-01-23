@@ -9,7 +9,32 @@ import apiUrl from "../ApiConfig";
 export default function HomeLoggedIn() {
   const currentUser = useSelector((state) => state.auth.user);
   const [invoices, setInvoices] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [appointments, setAppointments] = useState([]);
+
+  useEffect(() => {
+    {
+      currentUser.id &&
+        fetch(`${apiUrl}/users/${currentUser.id}/orders`, {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            if (data.status.code === 200) {
+              setOrders(data.data);
+            } else {
+              throw new Error(data.status.message);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+    }
+  }, [currentUser]);
+
 
   useEffect(() => {
     {
@@ -33,6 +58,7 @@ export default function HomeLoggedIn() {
           });
     }
   }, [currentUser]);
+
 
   useEffect(() => {
     {
@@ -97,6 +123,9 @@ export default function HomeLoggedIn() {
       <div className="mt-5">
         <h2 className="text-2xl">Your next appointments</h2>
         <div>
+          {appointments.length === 0 && (
+            <p className="ml-3">You have no appointments</p>
+          )}
           {appointments.map((appointment) => (
             <CardMeeting
               key={appointment.id}
@@ -133,6 +162,9 @@ export default function HomeLoggedIn() {
 
       <div className="mt-5">
         <h2 className="text-2xl">Your Invoices</h2>
+        {invoices.length === 0 && (
+          <p className="ml-3">You have no invoices</p>
+        )}
         {invoices.map((invoice) => (
           <div
             key={invoice.id}
@@ -178,6 +210,42 @@ export default function HomeLoggedIn() {
                 </div>
               </div>
             </div>
+          </div>
+        ))}
+
+        <h2 className="text-2xl mt-3">Your orders</h2>
+        {orders.length === 0 && (
+          <p className="ml-3">You have no orders</p>
+        )}
+        {orders.map((order) => (
+          <div
+            key={order.id}
+            className="border-2 border-black mt-3 p-4 rounded-lg"
+          >
+            <div className="flex justify-between">
+              <p
+                className={`${
+                  order.status === "cancelled" || order.status === "unpaid" || order.status === "refunded"
+                    ? "text-red-500"
+                    : order.status === "sent" || order.status === "delivered" || order.status === "accepted" || order.status === "paid"
+                    ? "text-green"
+                    : ""
+                } font-bold`}
+              >
+                {order.status.toUpperCase()}
+              </p>
+              <p>{order.total}$</p>
+            </div>
+            {/* <div>
+              {order.items.map((item, index) => (
+                <div key={index} className="flex justify-between mt-2">
+                  <img src="" alt={`Picture of ${item.title}`} />
+                  <p>{item.title}</p>
+                  <p>x{item.quantity}</p>
+                  <p>{item.price}$</p>
+                </div>
+              ))}
+            </div> */}
           </div>
         ))}
       </div>

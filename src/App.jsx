@@ -36,6 +36,7 @@ import { CheckoutReturn } from "./pages/CheckoutReturn";
 import OrderNew from "./pages/OrderNew";
 import Contacts from "./pages/Admin/Contacts";
 import apiUrl from "./ApiConfig";
+import Orders from "./pages/Admin/Orders";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -185,6 +186,15 @@ function App() {
               element={
                 <AdminRoute>
                   <Chat />
+                </AdminRoute>
+              }
+            />
+
+            <Route
+              path="/admin/orders"
+              element={
+                <AdminRoute>
+                  <Orders />
                 </AdminRoute>
               }
             />

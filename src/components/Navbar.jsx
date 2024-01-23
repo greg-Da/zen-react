@@ -157,6 +157,9 @@ export default function Navbar() {
                               <Link to={"/admin/invoices"}>Invoices</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
+                              <Link to={"/admin/orders"}>Orders</Link>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseAdmin}>
                               <Link to={"/admin/contacts"}>Contacts</Link>
                             </MenuItem>
                             <MenuItem onClick={handleCloseAdmin}>
@@ -292,6 +295,13 @@ export default function Navbar() {
               to={"/admin/invoices"}
             >
               Invoices
+            </Link>
+            <Link
+              className="font-bold my-2"
+              onClick={() => setUnfolded(false)}
+              to={"/admin/orders"}
+            >
+              Orders
             </Link>
             <Link
               className="font-bold my-2"
